@@ -1,9 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function HomePage() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
   const [loadingMatch, setLoadingMatch] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/auth/login");
+    }
+  }, [loading, user, router]);
+
+  if (loading || (!user && typeof window !== "undefined")) {
+    return (
+      <main className="h-screen flex items-center justify-center">
+        <div className="text-sm text-gray-400">Loading your space…</div>
+      </main>
+    );
+  }
 
   const handleMatchMe = async () => {
     setLoadingMatch(true);
@@ -14,8 +32,8 @@ export default function HomePage() {
         body: JSON.stringify({
           topic: "Test topic",
           feeling: "curious",
-          desiredOutcome: "Just testing the flow"
-        })
+          desiredOutcome: "Just testing the flow",
+        }),
       });
       const data = await res.json();
       console.log("Session start result:", data);

@@ -1,66 +1,153 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [confirmAge, setConfirmAge] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!email || !password || !confirmPassword) return;
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+    if (!agreeTerms || !confirmAge) {
+      alert("Please agree to the terms and confirm your age.");
+      return;
+    }
+
     setLoading(true);
     try {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, "users", cred.user.uid), {
-        email,
-        createdAt: serverTimestamp(),
-      });
+      await createUserWithEmailAndPassword(auth, email, password);
       router.replace("/home");
     } catch (err: any) {
       console.error(err);
-      alert(err.message ?? "Sign up failed");
+      alert(err?.message ?? "Account creation failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="h-screen flex items-center justify-center px-6">
-      <form
-        onSubmit={onSubmit}
-        className="w-full max-w-xs space-y-4 border border-gray-800 rounded-2xl p-4"
-      >
-        <h1 className="text-xl font-semibold text-center">Create Account</h1>
-
-        <input
-          className="w-full px-3 py-2 rounded-lg bg-black border border-gray-700 text-sm"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+    <main className="page-auth">
+      {/* Logo */}
+      <div className="mb-10">
+        <img
+          src="/logo.png"
+          alt="Thought Partner Logo"
+          style={{ width: 80, height: 80 }}
         />
+      </div>
 
-        <input
-          className="w-full px-3 py-2 rounded-lg bg-black border border-gray-700 text-sm"
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      <div className="auth-shell">
+        <form onSubmit={onSubmit}>
+          {/* Title */}
+          <h1
+            style={{
+              fontFamily: "Georgia, serif",
+              fontSize: "1.4rem",
+              fontWeight: 700,
+              marginBottom: "1rem",
+            }}
+          >
+            Create Account
+          </h1>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full py-2 rounded-lg bg-white text-black text-sm font-medium disabled:opacity-60"
-        >
-          {loading ? "Creating…" : "Create Account"}
-        </button>
-      </form>
+          {/* Email */}
+          <label className="auth-label" htmlFor="email">
+            Email:
+          </label>
+          <input
+            id="email"
+            className="auth-input"
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+
+          {/* Password */}
+          <label className="auth-label" htmlFor="password">
+            Password:
+          </label>
+          <input
+            id="password"
+            className="auth-input"
+            type="password"
+            placeholder="Enter a password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+
+          {/* Confirm Password */}
+          <label className="auth-label" htmlFor="confirmPassword">
+            Confirm Password:
+          </label>
+          <input
+            id="confirmPassword"
+            className="auth-input"
+            type="password"
+            placeholder="Re-enter your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+          />
+
+          {/* Terms / Age checkboxes */}
+          <label className="auth-checkbox-row">
+            <input
+              type="checkbox"
+              checked={agreeTerms}
+              onChange={(e) => setAgreeTerms(e.target.checked)}
+            />
+            <span>
+              I agree to the Terms &amp; Conditions
+            </span>
+          </label>
+
+          <label className="auth-checkbox-row">
+            <input
+              type="checkbox"
+              checked={confirmAge}
+              onChange={(e) => setConfirmAge(e.target.checked)}
+            />
+            <span>I confirm that I am 18 years of age or older.</span>
+          </label>
+
+          {/* Create Account button */}
+          <button
+            type="submit"
+            className="auth-btn-primary"
+            disabled={loading}
+          >
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
+        </form>
+
+        {/* Footer: Already have an account? */}
+        <div className="auth-footer">
+          Already have an account?{" "}
+          <button
+            type="button"
+            className="auth-link"
+            onClick={() => router.push("/auth/login")}
+          >
+            Log In
+          </button>
+        </div>
+      </div>
     </main>
   );
 }
