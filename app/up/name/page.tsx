@@ -8,16 +8,19 @@ export default function UpNamePage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const handleContinue = () => {
-    if (!firstName.trim()) return;
-    // TODO: save firstName + lastName
+  const canContinue = firstName.trim().length > 0;
+
+  const handleNext = () => {
+    if (!canContinue) return;
+    // TODO: save names
     router.push("/up/thinking-style");
   };
 
-  const canContinue = firstName.trim().length > 0;
-
   return (
-    <main className="light-bg-page">
+    <main className="light-bg-page up-page">
+      {/* top-right logo */}
+      <img src="/Logo Gold.png" alt="App Logo" className="up-logo-top-right" />
+
       <div className="intro-shell">
         <h1 className="intro-title">What should we call you?</h1>
 
@@ -36,13 +39,49 @@ export default function UpNamePage() {
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
         />
+      </div>
 
+      {/* bottom nav arrows */}
+      <div className="up-bottom-nav">
+        {/* BACK <──── */}
         <button
-          className="intro-btn"
-          disabled={!canContinue}
-          onClick={handleContinue}
+          type="button"
+          className="up-nav-btn"
+          onClick={() => router.push("/up/gender")}
         >
-          Continue
+          <svg
+            className="up-arrow-icon"
+            viewBox="0 0 40 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="34" y1="12" x2="6" y2="12" />
+            <polyline points="12 8 6 12 12 16" />
+          </svg>
+        </button>
+
+        {/* NEXT ────> */}
+        <button
+          type="button"
+          className="up-nav-btn"
+          disabled={!canContinue}
+          onClick={handleNext}
+        >
+          <svg
+            className="up-arrow-icon"
+            viewBox="0 0 40 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="6" y1="12" x2="34" y2="12" />
+            <polyline points="28 8 34 12 28 16" />
+          </svg>
         </button>
       </div>
     </main>

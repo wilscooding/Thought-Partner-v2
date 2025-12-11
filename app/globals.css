@@ -264,36 +264,6 @@ img {
    INTRO / ONBOARDING PAGES (LIGHT BG)
 ========================================= */
 
-.light-bg-page {
-  min-height: 100vh;
-  background-color: #f9f6f1; /* from your PDF */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 4.5rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-
-/* Centered narrow column for intro screens */
-.intro-shell {
-  width: 100%;
-  max-width: 320px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Big serif title on light background */
-.intro-title {
-  font-family: Georgia, serif;
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: #2f2b25; /* dark warm gray, reads well on #f9f6f1 */
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
 
 /* Subtitle/body copy */
 .intro-subtitle {
@@ -324,4 +294,131 @@ img {
   font-size: 1.1rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* =========================================
+   UP ONBOARDING PAGES (AGE / EXPERIENCE / ETC.)
+========================================= */
+
+/* Make UP pages positionable for the absolute logo */
+.light-bg-page {
+  position: relative;              /* NEW: needed for top-right logo */
+  min-height: 100vh;
+  background-color: #f9f6f1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 4.5rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* Narrow centered column for title + dropdown */
+.intro-shell {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Big serif title */
+.intro-title {
+  font-family: Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #2f2b25;
+  margin-top: 3rem;              /* space below logo */
+  margin-bottom: 1.75rem;
+  line-height: 1.2;
+}
+
+/* ---------- TOP-RIGHT LOGO ---------- */
+
+.up-logo-top-right {
+  position: absolute;
+  top: 1.8rem;                     /* distance from top edge */
+  right: 1.8rem;                   /* distance from right edge */
+  width: 56px;                     /* visual size from mock */
+  height: auto;
+  z-index: 10;
+  
+}
+
+/* ---------- BEIGE DROPDOWN PILL ---------- */
+
+.up-select-wrapper {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 5.5rem auto;        /* space below title + above arrows */
+  position: relative;
+}
+
+.up-select {
+  width: 100%;
+  border-radius: 9999px;
+  border: none;
+  background: var(--tp-btn-beige); /* #c2b280 */
+  color: #000000;
+  padding: 0.9rem 1.1rem;
+  font-size: 1rem;
+  font-family: Georgia, serif;
+  font-weight: 600;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Placeholder option tone */
+.up-select option[disabled] {
+  color: #2f2b25;
+}
+
+/* Little chevron inside the pill on the right */
+.up-select-arrow {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 0.9rem;
+  color: #000000;
+}
+
+/* ---------- BOTTOM NAV ARROWS ---------- */
+
+.up-bottom-nav {
+  width: 100%;
+  max-width: 320px;
+  margin: 3rem auto 0 auto; /* distance from dropdown */
+  padding: 0 0.5rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.up-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* SVG chevron icon */
+.up-arrow-icon {
+  width: 32px;
+  height: 32px;
+  color: #2f2b25;                  /* same as title */
+  display: block;
+}
+
+/* Disabled state for the NEXT arrow */
+.up-nav-btn:disabled .up-arrow-icon {
+  opacity: 0.3;
+  cursor: default;
 }
