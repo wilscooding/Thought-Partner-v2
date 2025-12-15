@@ -2,68 +2,84 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function UpNamePage() {
   const router = useRouter();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const canContinue = firstName.trim().length > 0;
+  // Validation now requires both first and last name to be entered
+  const canContinue = firstName.trim().length > 0 && lastName.trim().length > 0;
 
   const handleNext = () => {
     if (!canContinue) return;
-    // TODO: save names
-    router.push("/up/thinking-style");
+    // Next page in sequence: Age Page
+    router.push("/up/age");
   };
 
   return (
-    <main className="light-bg-page up-page">
+    <main className="light-bg-page">
       {/* top-right logo */}
-      <img src="/Logo Gold.png" alt="App Logo" className="up-logo-top-right" />
+      <Image src="/Logo Gold.png" alt="App Logo" width={56} height={56} priority={true} className="up-logo-top-right" />
 
       <div className="intro-shell">
         <h1 className="intro-title">What should we call you?</h1>
 
-        <input
-          className="auth-input"
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
+        <div className="up-select-wrapper">
 
-        <input
-          className="auth-input"
-          type="text"
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
+          {/* ===== First Name Block (Label + Input) ===== */}
+          <div className="up-input-block">
+            <label className="up-input-label" htmlFor="firstName">First Name</label>
+            <input
+              id="firstName"
+              className="up-select-pill"
+              type="text"
+              placeholder=""
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+
+          {/* ===== Last Name Block (Label + Input) ===== */}
+          <div className="up-input-block">
+            <label className="up-input-label" htmlFor="lastName">Last Name</label>
+            <input
+              id="lastName"
+              className="up-select-pill"
+              type="text"
+              placeholder=""
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+
+        </div>
       </div>
 
       {/* bottom nav arrows */}
       <div className="up-bottom-nav">
-        {/* BACK <──── */}
+        {/* BACK: <──── */}
         <button
           type="button"
           className="up-nav-btn"
-          onClick={() => router.push("/up/gender")}
+          onClick={() => router.back()}
         >
           <svg
             className="up-arrow-icon"
-            viewBox="0 0 40 24"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <line x1="34" y1="12" x2="6" y2="12" />
-            <polyline points="12 8 6 12 12 16" />
+            <line x1="24" y1="12" x2="6" y2="12" />
+            <polyline points="10 8 6 12 10 16" />
           </svg>
         </button>
 
-        {/* NEXT ────> */}
+        {/* NEXT: ────> */}
         <button
           type="button"
           className="up-nav-btn"
@@ -72,15 +88,15 @@ export default function UpNamePage() {
         >
           <svg
             className="up-arrow-icon"
-            viewBox="0 0 40 24"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <line x1="6" y1="12" x2="34" y2="12" />
-            <polyline points="28 8 34 12 28 16" />
+            <line x1="0" y1="12" x2="18" y2="12" />
+            <polyline points="14 8 18 12 14 16" />
           </svg>
         </button>
       </div>

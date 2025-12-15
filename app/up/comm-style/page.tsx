@@ -4,48 +4,53 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const GENDER_OPTIONS = [
-  "Woman",
-  "Man",
-  "Non-Binary",
-  "Prefer not to say",
+const commOptions = [
+  "Direct",
+  "Reflective",
+  "Open-minded",
+  "Bold",
 ];
 
-export default function UpGenderPage() {
+export default function UpCommStylePage() {
   const router = useRouter();
-  const [gender, setGender] = useState("");
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState("");
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false); // Custom dropdown state
+
+  const canContinue = selectedStyle !== "";
 
   const handleNext = () => {
-    if (!gender) return;
-    // Next page in sequence: Proof of Identity
-    router.push("/up/proof-of-identity");
+    if (!canContinue) return;
+    // Next page in sequence: Relational Style Page
+    router.push("/up/relation-style");
   };
 
-  const handleOptionSelect = (opt: string) => {
-    setGender(opt);
-    setIsOptionsOpen(false);
+  const handleOptionSelect = (style: string) => {
+    setSelectedStyle(style);
+    setIsOptionsOpen(false); // Close the list after selection
   };
 
   return (
     <main className="light-bg-page">
-      {/* logo top-right */}
+      {/* top-right logo */}
       <Image src="/Logo Gold.png" alt="App Logo" width={56} height={56} priority={true} className="up-logo-top-right" />
 
       <div className="intro-shell">
         <h1 className="intro-title">
-          Choose the gender<br />
-          identity that fits you.
+          Choose the word that
+          <br />
+          best fits your
+          <br />
+          communication style.
         </h1>
 
-        {/* DROPDOWN PILL: CUSTOM IMPLEMENTATION */}
+        {/* DROPDOWN PILL: CUSTOM IMPLEMENTATION (matching Age page) */}
         <div className="up-select-wrapper">
           {/* 1. The Pill (now a clickable button) */}
           <button
             className="up-select-pill"
             onClick={() => setIsOptionsOpen(!isOptionsOpen)}
           >
-            {gender || "Select your gender identity"}
+            {selectedStyle || "Select your communication style"}
           </button>
 
           {/* 2. The custom SVG arrow */}
@@ -61,16 +66,17 @@ export default function UpGenderPage() {
             <polyline points="6 9 12 15 18 9" />
           </svg>
 
-          {/* 3. The Options List */}
+          {/* 3. The Options List (The element we can now style perfectly) */}
           {isOptionsOpen && (
             <div className="up-options-list">
-              {GENDER_OPTIONS.map((opt) => (
+              {commOptions.map((style) => (
                 <button
-                  key={opt}
-                  className={`up-option-item ${gender === opt ? 'selected' : ''}`}
-                  onClick={() => handleOptionSelect(opt)}
+                  key={style}
+                  // Using 'up-option-item' class
+                  className={`up-option-item ${selectedStyle === style ? 'selected' : ''}`}
+                  onClick={() => handleOptionSelect(style)}
                 >
-                  {opt}
+                  {style}
                 </button>
               ))}
             </div>
@@ -104,7 +110,7 @@ export default function UpGenderPage() {
         <button
           type="button"
           className="up-nav-btn"
-          disabled={!gender}
+          disabled={!canContinue}
           onClick={handleNext}
         >
           <svg

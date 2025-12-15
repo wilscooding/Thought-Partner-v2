@@ -2,29 +2,36 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const THINKING_OPTIONS = [
-  "Big-picture",
-  "Detail-oriented",
-  "Strategic",
   "Creative",
   "Analytical",
+  "Strategic",
+  "Intuitive",
+  "Curious",
 ];
 
 export default function UpThinkingStylePage() {
   const router = useRouter();
   const [style, setStyle] = useState("");
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   const handleNext = () => {
     if (!style) return;
-    // TODO: save style
-    router.push("/home"); // or whatever final onboarding route
+    // Final page in sequence: Routing to the final destination
+    router.push("/up/energy-style");
+  };
+
+  const handleOptionSelect = (opt: string) => {
+    setStyle(opt);
+    setIsOptionsOpen(false);
   };
 
   return (
-    <main className="light-bg-page up-page">
+    <main className="light-bg-page">
       {/* logo top-right */}
-      <img src="/Logo Gold.png" alt="App Logo" className="up-logo-top-right" />
+      <Image src="/Logo Gold.png" alt="App Logo" width={56} height={56} priority={true} className="up-logo-top-right" />
 
       <div className="intro-shell">
         <h1 className="intro-title">
@@ -32,46 +39,65 @@ export default function UpThinkingStylePage() {
           best fits your thinking style.
         </h1>
 
-        {/* dropdown pill */}
+        {/* DROPDOWN PILL: CUSTOM IMPLEMENTATION */}
         <div className="up-select-wrapper">
-          <select
-            className="up-select"
-            value={style}
-            onChange={(e) => setStyle(e.target.value)}
+          {/* 1. The Pill (now a clickable button) */}
+          <button
+            className="up-select-pill"
+            onClick={() => setIsOptionsOpen(!isOptionsOpen)}
           >
-            <option value="" disabled>
-              Select your thinking style
-            </option>
-            {THINKING_OPTIONS.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
+            {style || "Select your thinking style"}
+          </button>
 
-          <span className="up-select-arrow">⌄</span>
+          {/* 2. The custom SVG arrow */}
+          <svg
+            className="up-select-arrow"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+
+          {/* 3. The Options List */}
+          {isOptionsOpen && (
+            <div className="up-options-list">
+              {THINKING_OPTIONS.map((opt) => (
+                <button
+                  key={opt}
+                  className={`up-option-item ${style === opt ? 'selected' : ''}`}
+                  onClick={() => handleOptionSelect(opt)}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* bottom arrows */}
+      {/* bottom nav arrows */}
       <div className="up-bottom-nav">
         {/* BACK: <──── */}
         <button
           type="button"
           className="up-nav-btn"
-          onClick={() => router.push("/up/name")}
+          onClick={() => router.back()}
         >
           <svg
             className="up-arrow-icon"
-            viewBox="0 0 40 24"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <line x1="34" y1="12" x2="6" y2="12" />
-            <polyline points="12 8 6 12 12 16" />
+            <line x1="24" y1="12" x2="6" y2="12" />
+            <polyline points="10 8 6 12 10 16" />
           </svg>
         </button>
 
@@ -84,15 +110,15 @@ export default function UpThinkingStylePage() {
         >
           <svg
             className="up-arrow-icon"
-            viewBox="0 0 40 24"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <line x1="6" y1="12" x2="34" y2="12" />
-            <polyline points="28 8 34 12 28 16" />
+            <line x1="0" y1="12" x2="18" y2="12" />
+            <polyline points="14 8 18 12 14 16" />
           </svg>
         </button>
       </div>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import Image from "next/image";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,7 +13,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: FormEvent) => {
+  // Removed FormEvent type annotation for plain JS compatibility -> Added back for TS
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
 
@@ -45,13 +47,16 @@ export default function LoginPage() {
 
   return (
     <main className="page-auth">
-      {/* ===== LOGO ===== */}
-      <div className="mb-10">
-        {/* Replace with your actual logo when ready */}
-        <img
-          src="/logo.png"
-          alt="Thought Partner Logo"
-          style={{ width: 80, height: 80 }}
+      {/* ===== LOGO: Updated to match PDF and use Logo Gold.png ===== */}
+      <div className="mb-10 auth-logo-wrapper">
+        <Image
+          src="/Logo Gold.png"
+          alt="App Logo"
+          width={120}
+          height={120}
+          priority={true}
+          // Class for large, centered logo as seen in the PDF
+          className="login-main-logo"
         />
       </div>
 
@@ -88,46 +93,46 @@ export default function LoginPage() {
             />
 
             <button
-                type="button"
-                className="input-icon"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  // Eye-off SVG
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#444"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M17.94 17.94A10.06 10.06 0 0 1 12 20c-7 0-11-8-11-8a20.19 20.19 0 0 1 5.06-7.94" />
-                    <path d="M1 1l22 22" />
-                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
-                  </svg>
-                ) : (
-                  // Eye (show password)
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#444"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                )}
-              </button>
+              type="button"
+              className="input-icon"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                // Eye-off SVG
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#444"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17.94 17.94A10.06 10.06 0 0 1 12 20c-7 0-11-8-11-8a20.19 20.19 0 0 1 5.06-7.94" />
+                  <path d="M1 1l22 22" />
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                </svg>
+              ) : (
+                // Eye (show password)
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#444"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
+            </button>
 
           </div>
 

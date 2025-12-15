@@ -4,26 +4,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-const GENDER_OPTIONS = [
-  "Woman",
-  "Man",
-  "Non-Binary",
-  "Prefer not to say",
+const IDENTITY_OPTIONS = [
+  "Career Changer/Explorer",
+  "Entrepreneur/Founder",
+  "Independent Consultant/Coach",
+  "Individual Contributor (non-manager)",
+  "Nonprofit or Mission-Driven Professional",
+  "People Manager/Team Lead",
+  "Senior Leader/Executive",
+  "Side Hustler/Aspiring Founder",
+  "Student/Early Career Professional",
 ];
 
-export default function UpGenderPage() {
+export default function UpProfessionalIdentityPage() {
   const router = useRouter();
-  const [gender, setGender] = useState("");
+  const [identity, setIdentity] = useState("");
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
   const handleNext = () => {
-    if (!gender) return;
-    // Next page in sequence: Proof of Identity
-    router.push("/up/proof-of-identity");
+    if (!identity) return;
+    // Next page in sequence: Industry
+    router.push("/up/industry");
   };
 
   const handleOptionSelect = (opt: string) => {
-    setGender(opt);
+    setIdentity(opt);
     setIsOptionsOpen(false);
   };
 
@@ -34,8 +39,8 @@ export default function UpGenderPage() {
 
       <div className="intro-shell">
         <h1 className="intro-title">
-          Choose the gender<br />
-          identity that fits you.
+          What professional identity<br />
+          feels most like you?
         </h1>
 
         {/* DROPDOWN PILL: CUSTOM IMPLEMENTATION */}
@@ -45,7 +50,7 @@ export default function UpGenderPage() {
             className="up-select-pill"
             onClick={() => setIsOptionsOpen(!isOptionsOpen)}
           >
-            {gender || "Select your gender identity"}
+            {identity || "Select your professional identity"}
           </button>
 
           {/* 2. The custom SVG arrow */}
@@ -64,10 +69,10 @@ export default function UpGenderPage() {
           {/* 3. The Options List */}
           {isOptionsOpen && (
             <div className="up-options-list">
-              {GENDER_OPTIONS.map((opt) => (
+              {IDENTITY_OPTIONS.map((opt) => (
                 <button
                   key={opt}
-                  className={`up-option-item ${gender === opt ? 'selected' : ''}`}
+                  className={`up-option-item ${identity === opt ? 'selected' : ''}`}
                   onClick={() => handleOptionSelect(opt)}
                 >
                   {opt}
@@ -78,9 +83,9 @@ export default function UpGenderPage() {
         </div>
       </div>
 
-      {/* bottom nav arrows */}
+      {/* bottom arrows */}
       <div className="up-bottom-nav">
-        {/* BACK: <──── */}
+        {/* BACK: <---- */}
         <button
           type="button"
           className="up-nav-btn"
@@ -100,11 +105,11 @@ export default function UpGenderPage() {
           </svg>
         </button>
 
-        {/* NEXT: ────> */}
+        {/* NEXT: ----> */}
         <button
           type="button"
           className="up-nav-btn"
-          disabled={!gender}
+          disabled={!identity}
           onClick={handleNext}
         >
           <svg

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import Image from "next/image";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function RegisterPage() {
   const [confirmAge, setConfirmAge] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password || !confirmPassword) return;
     if (password !== confirmPassword) {
@@ -29,7 +30,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.replace("/home");
+      // Navigate to the next onboarding step
+      router.replace("/up/welcome");
     } catch (err: any) {
       console.error(err);
       alert(err?.message ?? "Account creation failed");
@@ -39,27 +41,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="page-auth">
-      {/* Logo */}
-      <div className="mb-10">
-        <img
-          src="/logo.png"
-          alt="Thought Partner Logo"
-          style={{ width: 80, height: 80 }}
-        />
-      </div>
+    <main className="page-auth page-auth-register"> {/* <--- NEW CLASS ADDED HERE */}
+      {/* ===== TOP-RIGHT LOGO ===== */}
+      <Image src="/Logo Gold.png" alt="App Logo" width={56} height={56} priority={true} className="up-logo-top-right" />
 
       <div className="auth-shell">
         <form onSubmit={onSubmit}>
-          {/* Title */}
-          <h1
-            style={{
-              fontFamily: "Georgia, serif",
-              fontSize: "1.4rem",
-              fontWeight: 700,
-              marginBottom: "1rem",
-            }}
-          >
+          <h1 className="auth-title-large">
             Create Account
           </h1>
 
@@ -85,7 +73,7 @@ export default function RegisterPage() {
             id="password"
             className="auth-input"
             type="password"
-            placeholder="Enter a password"
+            placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="new-password"
@@ -99,7 +87,7 @@ export default function RegisterPage() {
             id="confirmPassword"
             className="auth-input"
             type="password"
-            placeholder="Re-enter your password"
+            placeholder="Re-enter password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
@@ -113,7 +101,7 @@ export default function RegisterPage() {
               onChange={(e) => setAgreeTerms(e.target.checked)}
             />
             <span>
-              I agree to the Terms &amp; Conditions
+              I agree to the terms and conditions
             </span>
           </label>
 
@@ -130,9 +118,9 @@ export default function RegisterPage() {
           <button
             type="submit"
             className="auth-btn-primary"
-            disabled={loading}
+            disabled={loading || !agreeTerms || !confirmAge}
           >
-            {loading ? "Creating account..." : "Create Account"}
+            {loading ? "Creating account..." : "Submit"}
           </button>
         </form>
 

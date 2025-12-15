@@ -1,0 +1,13 @@
+﻿app/auth/login/page.tsx(16,27): error TS7006: Parameter 'e' implicitly has an 'any' type.
+app/auth/login/page.tsx(26,18): error TS2339: Property 'message' does not exist on type '{}'.
+app/auth/register/page.tsx(17,27): error TS7006: Parameter 'e' implicitly has an 'any' type.
+app/auth/register/page.tsx(36,18): error TS2339: Property 'message' does not exist on type '{}'.
+app/up/age/page.tsx(19,33): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+app/up/comm-style/page.tsx(26,31): error TS7006: Parameter 'style' implicitly has an 'any' type.
+app/up/energy-style/page.tsx(26,31): error TS7006: Parameter 'style' implicitly has an 'any' type.
+app/up/experience/page.tsx(25,31): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+app/up/gender/page.tsx(24,31): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+app/up/industry/page.tsx(31,31): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+app/up/proof-of-identity/page.tsx(29,31): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+app/up/relation-style/page.tsx(27,31): error TS7006: Parameter 'style' implicitly has an 'any' type.
+app/up/thinking-style/page.tsx(25,31): error TS7006: Parameter 'opt' implicitly has an 'any' type.
