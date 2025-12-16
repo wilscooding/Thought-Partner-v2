@@ -22,9 +22,14 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.replace("/home");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      alert(err?.message ?? "Login failed");
+
+      let errorMessage = "Login failed, Please check your credentials.";
+      if (err && typeof err == 'object' && 'message' in err) {
+        errorMessage = (err as { message: string }).message;
+      }
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }

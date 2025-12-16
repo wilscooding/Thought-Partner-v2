@@ -1,0 +1,13 @@
+﻿
+> thought-partner-v2@0.1.0 lint
+> eslint
+
+
+C:\Users\moren\Projects\thought-partner-v2\app\auth\login\page.tsx
+  25:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\moren\Projects\thought-partner-v2\app\auth\register\page.tsx
+  35:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 2 problems (2 errors, 0 warnings)
+

@@ -32,9 +32,13 @@ export default function RegisterPage() {
       await createUserWithEmailAndPassword(auth, email, password);
       // Navigate to the next onboarding step
       router.replace("/up/welcome");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      alert(err?.message ?? "Account creation failed");
+      let errorMessage = "Account creation failed.";
+      if (err && typeof err == 'object' && 'message' in err) {
+        errorMessage = (err as { message: string }).message;
+      }
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
