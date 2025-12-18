@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 // Corrected import path as requested
 import SiteMenu from '@/components/SiteMenu';
-import Image from "next/image";
 
 // --- DATA: List of Thought Partners ---
 // The first 6 match the names and order from the visual mock-up.

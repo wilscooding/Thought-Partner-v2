@@ -1,48 +1,67 @@
 "use client";
 
-import SiteMenu from "@/components/SiteMenu";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import SiteMenu from "@/components/SiteMenu";
 
-// --- ICON COMPONENTS ---
 
-// Phone Icon SVG for the "Make the Call" button
+
+// Phone icon (Make the call)
 const PhoneIcon = () => (
     <svg
         viewBox="0 0 24 24"
+        width="20"
+        height="20"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="session-end-phone-icon"
     >
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-4.71-4.71 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.08 2h3a2 2 0 0 1 2 1.74A14.28 14.28 0 0 0 9.87 7.7a2 2 0 0 1-.33 2.13l-1.9 1.9a15.4 15.4 0 0 0 6.55 6.55l1.9-1.9a2 2 0 0 1 2.13-.33 14.28 14.28 0 0 0 3.96 1.63 2 2 0 0 1 1.74 2z" />
+        <path d="M21 16.5v3a2 2 0 0 1-2.2 2
+      18 18 0 0 1-7.8-2.8
+      17.5 17.5 0 0 1-5.2-5.2
+      18 18 0 0 1-2.8-7.8
+      A2 2 0 0 1 5.5 3h3
+      a2 2 0 0 1 2 1.7
+      13 13 0 0 0 .8 3.5
+      a2 2 0 0 1-.4 2.1
+      l-1.6 1.6
+      a14 14 0 0 0 5.4 5.4
+      l1.6-1.6
+      a2 2 0 0 1 2.1-.4
+      13 13 0 0 0 3.5.8
+      A2 2 0 0 1 21 16.5z"
+        />
     </svg>
 );
 
+// Restart icon (Start over)
+const RestartIcon = () => (
+    <svg
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        <path d="M3 12a9 9 0 1 0 3-6.7" />
+        <polyline points="3 4 3 10 9 10" />
+    </svg>
+);
 
 export default function SessionSetupEndPage() {
     const router = useRouter();
 
-    const handleCallClick = () => {
-        // Placeholder: Start the call/session flow
-        console.log("Initiating call...");
-        // router.push('/session/call'); 
-    };
-
-    const handleStartOverClick = () => {
-        // Placeholder: Go back to the session start page
-        router.push('/session/start');
-    };
-
     return (
         <main className="light-bg-page">
-
-            {/* Top-left menu button */}
+            {/* burger (set burger to dark on light pages) */}
             <SiteMenu burgerColor="#2f2b25" />
 
-            {/* Top-right logo using Logo Dark.png */}
+            {/* top-right logo (dark logo on light page) */}
             <Image
                 src="/Logo Dark.png"
                 alt="Thought Partner Logo"
@@ -52,36 +71,33 @@ export default function SessionSetupEndPage() {
                 className="main-logo-top-right"
             />
 
-            {/* Main content shell, centered and constrained */}
             <div className="session-end-shell">
-
-                {/* Title: All set. I've passed everything along. [cite: 17] */}
                 <h1 className="session-end-title">
-                    All set. I&apos;ve passed
+                    All set. I’ve passed
                     <br />
                     everything along.
                 </h1>
 
-                {/* Subtitle/Description: Your Thought Partner has what they need to begin. [cite: 18] */}
                 <p className="session-end-subtitle">
-                    Your Thought Partner has what they need to begin. [cite: 18]
+                    Your Thought Partner has what
+                    <br />
+                    they need to begin.
                 </p>
 
-                {/* Primary CTA: Make the Call [cite: 19] */}
                 <button
-                    className="session-end-call-btn"
-                    onClick={handleCallClick}
+                    className="session-end-primary-btn"
+                    onClick={() => router.push("/call")} // change to your real call route
                 >
                     <PhoneIcon />
-                    Make the Call [cite: 19]
+                    Make the Call
                 </button>
 
-                {/* Secondary CTA: Start Over [cite: 20] */}
                 <button
                     className="session-end-secondary-btn"
-                    onClick={handleStartOverClick}
+                    onClick={() => router.push("/session/start")} // change to your start-over route
                 >
-                    Start Over [cite: 20]
+                    <RestartIcon />
+                    Start Over
                 </button>
             </div>
         </main>
