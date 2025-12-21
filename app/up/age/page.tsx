@@ -23,7 +23,7 @@ export default function UpAgePage() {
     };
 
     return (
-        <main className="light-bg-page">
+        <main className="up-light-bg-page">
             {/* logo top-right */}
             <Image src="/Logo Gold.png" alt="App Logo" width={56} height={56} priority={true} className="up-logo-top-right" />
 

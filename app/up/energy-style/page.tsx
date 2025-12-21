@@ -30,7 +30,7 @@ export default function UpEnergyStylePage() {
   };
 
   return (
-    <main className="light-bg-page">
+    <main className="up-light-bg-page">
       {/* top-right logo */}
       <Image src="/Logo Gold.png" alt="App Logo" width={56} height={56} priority={true} className="up-logo-top-right" />
 
