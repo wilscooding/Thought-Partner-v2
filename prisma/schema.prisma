@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String   @id @default(cuid())
+  firebaseUid String   @unique
+  email       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  profileAnswers ProfileAnswer[]
+  sessions       Session[]
+}
+
+model ProfileAnswer {
+  id        String   @id @default(cuid())
+  userId    String
+  key       String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([key])
+}
+
+model Avatar {
+  // Stable slug IDs (Option A) e.g. "denise_okoro"
+  id        String   @id
+  name      String
+  archetype String?
+  gender    String?
+
+  // From connectivity sheet (mindset mapping)
+  engagedWhen String?
+
+  // From Avatar Profile Descriptions.docx (user-facing)
+  profileBlurb String? @db.Text
+  bestUsedWhen String? @db.Text
+
+  // From connectivity sheet (prompt-supporting metadata)
+  personalityDescription String? @db.Text
+  physicalDescription    String? @db.Text
+  voiceDescription       String? @db.Text
+
+  // Universal + specific system prompt
+  systemPrompt String? @db.Text
+
+  // Frontend asset reference: /public/avatars/{photoKey}.png
+  // Usually same as id, but kept flexible for renames.
+  photoKey String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions Session[]
+
+  @@index([name])
+  @@index([archetype])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  avatarId  String
+
+  status    String   @default("ACTIVE") // ACTIVE | ENDED
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  // Optional session “setup” context (from your Session Prompts sheet)
+  // Store as JSON so you can change the shape without new migrations.
+  context Json?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatar Avatar @relation(fields: [avatarId], references: [id])
+
+  messages Message[]
+
+  @@index([userId])
+  @@index([avatarId])
+  @@index([status])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  sessionId String
+
+  // "user" | "assistant" | "system"
+  role    String
+  content String @db.Text
+
+  // Optional metadata (model name, tokens, latency, etc.)
+  meta Json?
+
+  createdAt DateTime @default(now())
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([role])
+  @@index([createdAt])
+}
