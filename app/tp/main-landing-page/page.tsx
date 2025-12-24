@@ -9,24 +9,21 @@ export default function MainLandingPage() {
 
   return (
     <main className="dark-landing-page">
-      {/* 1. Reusable Site Menu */}
       <SiteMenu />
 
-      {/* 2. Small Logo (Top-Right) */}
       <Image
         src="/Logo Gold.png"
         alt="App Logo"
         width={56}
         height={56}
-        priority={true}
+        priority
         className="main-logo-top-right"
       />
 
-      {/* 3. Main Content */}
       <div className="landing-shell">
         <button
           className="landing-action-card"
-          onClick={() => router.push("/partners")}
+          onClick={() => router.push("/tp/profile-landing")}
         >
           Browse Our Thought Partners
         </button>
@@ -35,7 +32,7 @@ export default function MainLandingPage() {
 
         <button
           className="landing-action-card"
-          onClick={() => router.push("/match-intro")}
+          onClick={() => router.push("/tp/setup-start")}
         >
           Find My Match for This Moment
         </button>

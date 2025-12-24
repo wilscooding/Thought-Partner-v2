@@ -422,6 +422,15 @@ body {
   margin-bottom: 1rem;
 }
 
+.up-select-pill option {
+  font-size: 16px;
+  font-family: inherit;
+  padding: 0.95rem 1.1rem;
+  background-color: #f9f6f1;
+  color: #2f2b25;
+
+}
+
 .up-select-arrow {
   position: absolute;
   right: 18px;
@@ -748,6 +757,7 @@ body {
 }
 
 .tp-profile-item {
+  all: unset;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1546,19 +1556,32 @@ body {
 
 /* Custom styled dropdown pills */
 .up-select-pill {
-  position: relative;
-  width: 100%;
+  width: 300px;
+  /* or 100% + max-width */
   background: var(--tp-btn-beige);
   border: 1px solid rgba(47, 43, 37, 0.2);
   border-radius: 9999px;
   padding: 0.75rem 1.25rem;
   font-size: 0.95rem;
-  color: #666;
+  font-family: inherit;
+  color: #2f2b25;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+
+  /* remove flex - don't use on select */
+  display: block;
 }
+
+
+
+.up-select-pill option {
+  font-size: 16px;
+  font-family: inherit;
+  padding: 12px 16px;
+  background-color: #f9f6f1;
+  color: #2f2b25;
+}
+
 
 .setup-submit-btn {
   margin-top: 1rem;
@@ -2212,4 +2235,77 @@ body {
   padding-top: 15rem;
   padding-left: 2rem;
   padding-right: 2rem;
+}
+
+.tp-select-wrap {
+  width: 100%;
+}
+
+.up-select-pill {
+  position: relative;
+  width: 100%;
+  /* keep your existing pill visuals here */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.up-select-pill .tp-select-text {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.up-select-pill.is-placeholder .tp-select-text {
+  color: #666;
+}
+
+.up-select-arrow.is-open {
+  transform: rotate(180deg);
+}
+
+.tp-select-menu {
+  width: 100%;
+  /* ✅ exact same width as pill */
+  max-width: 100%;
+  /* ✅ never exceed container */
+  margin-top: 8px;
+  background: #f9f6f1;
+  border: 1px solid rgba(47, 43, 37, 0.2);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  list-style: none;
+
+  /* ✅ prevents the menu from “spilling” outside your card */
+  overflow: hidden;
+
+  /* optional: if you have lots of options */
+  max-height: 240px;
+  overflow-y: auto;
+  color: #2f2b25;
+}
+
+.tp-select-option {
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  /* choose one: wrap OR truncate */
+  white-space: normal;
+  /* ✅ wrap */
+  /* white-space: nowrap; overflow: hidden; text-overflow: ellipsis; */
+  /* ✅ truncate */
+}
+
+.tp-select-option.is-active,
+.tp-select-option:hover {
+  background: rgba(47, 43, 37, 0.08);
+}
+
+.tp-select-option.is-selected {
+  font-weight: 600;
 }

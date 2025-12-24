@@ -3,16 +3,100 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import SiteMenu from "@/components/SiteMenu";
+import { SESSION_PROMPTS } from "@/lib/sessionPrompts";
+import { useState } from "react";
+import { useAuth } from "@/components/AuthProvider";
+import SelectPill from "@/components/SelecPill";
 
 export default function SessionSetupPage() {
     const router = useRouter();
+    const { user } = useAuth();
+
+    const [values, setValues] = useState({
+        focus: "",
+        area: "",
+        feeling: "",
+        outcome: "",
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const questions = [
-        { id: 1, label: "What do you want to think through today?", placeholder: "Select an option..." },
-        { id: 2, label: "Which area best fits today's topic?", placeholder: "Select an area..." },
-        { id: 3, label: "How are you feeling right now?", placeholder: "Select your mood..." },
-        { id: 4, label: "What do you want to walk away after todays session?", placeholder: "Select an outcome..." }
-    ];
+        {
+            id: "focus",
+            label: "What do you want to think through today?",
+            placeholder: "Select an option...",
+        },
+        {
+            id: "area",
+            label: "Which area best fits today's topic?",
+            placeholder: "Select an area...",
+        },
+        {
+            id: "feeling",
+            label: "How are you feeling right now?",
+            placeholder: "Select your mood...",
+        },
+        {
+            id: "outcome",
+            label: "What do you want to walk away with after todays session?",
+            placeholder: "Select an outcome...",
+        },
+    ] as const;
+
+    const onSubmit = async () => {
+        setError(null);
+
+        if (!user?.uid) {
+            setError("You must be logged in to start a session.");
+            router.push("/auth/login");
+            return;
+        }
+
+        if (!values.focus || !values.area || !values.feeling || !values.outcome) {
+            setError("Please answer all four questions.");
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const res = await fetch("/api/sessions/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    firebaseUid: user.uid,
+                    topic: values.focus,
+                    area: values.area,
+                    feeling: values.feeling,
+                    desiredOutcome: values.outcome,
+                }),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error ?? "Failed to start session");
+
+            const sessionId = data.session?.id as string | undefined;
+            const avatarId = data.avatar?.id as string | undefined;
+            const avatarName = (data.avatar?.name as string | undefined) ?? "";
+
+            if (!sessionId || !avatarId) {
+                throw new Error("Session start succeeded but returned missing sessionId/avatarId.");
+            }
+
+            router.push(
+                `/tp/dialing-tp?sessionId=${encodeURIComponent(
+                    sessionId
+                )}&avatarId=${encodeURIComponent(avatarId)}&avatarName=${encodeURIComponent(
+                    avatarName
+                )}`
+            );
+        } catch (e: any) {
+            setError(e?.message ?? "Something went wrong.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <main className="light-bg-page session-setup-page">
@@ -28,35 +112,31 @@ export default function SessionSetupPage() {
             />
 
             <div className="setup-shell">
-                <form className="setup-form">
+                <form className="setup-form" onSubmit={(e) => e.preventDefault()}>
                     {questions.map((q) => (
                         <div key={q.id} className="setup-field">
-                            <label className="setup-label">{q.label}</label>
-                            <div className="up-select-pill">
-                                <span className="pill-placeholder">{q.placeholder}</span>
-                                {/* 2. The custom SVG arrow (replacing the span) */}
-                                <svg
-                                    className="up-select-arrow"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    {/* Downward arrow icon (you can customize this SVG) */}
-                                    <polyline points="6 9 12 15 18 9" />
-                                </svg>
-                            </div>
+                            <SelectPill
+                                label={q.label}
+                                placeholder={q.placeholder}
+                                value={values[q.id]}
+                                options={SESSION_PROMPTS[q.id]}
+                                onChange={(next) =>
+                                    setValues((prev) => ({ ...prev, [q.id]: next }))
+                                }
+                            />
                         </div>
                     ))}
+
+                    {error && <div className="setup-error">{error}</div>}
 
                     <button
                         type="button"
                         className="setup-submit-btn"
-                        onClick={() => router.push("/match-loading")}
+                        onClick={onSubmit}
+                        disabled={isSubmitting}
+                        aria-disabled={isSubmitting}
                     >
-                        Submit
+                        {isSubmitting ? "Submitting..." : "Submit"}
                     </button>
                 </form>
             </div>
