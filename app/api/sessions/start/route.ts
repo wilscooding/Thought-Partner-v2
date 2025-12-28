@@ -57,6 +57,10 @@ export async function POST(req: NextRequest) {
     avatar = pool[Math.floor(Math.random() * pool.length)];
   }
 
+  if (!avatar) {
+    return NextResponse.json({ error: "Avatar not found" }, { status: 500 });
+  }
+
   // 3) Create Session
   const session = await prisma.session.create({
     data: {
