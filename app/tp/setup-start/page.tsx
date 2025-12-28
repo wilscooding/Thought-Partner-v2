@@ -9,18 +9,18 @@ export default function SessionSetupStartPage() {
 
   const handleBeginClick = () => {
     // Navigate to the first session setup question
-    router.push("/session/q1");
+    router.push("/match/setup-page");
   };
 
   const handleBrowseProfilesClick = () => {
     // Navigate back to the full partner list
-    router.push("/partners");
+    router.push("/tp/profile-landing");
   };
 
   return (
     <main className="light-bg-page">
       {/* Top-right logo using Logo Dark.png */}
-      <SiteMenu  burgerColor="#2f2b25" />
+      <SiteMenu burgerColor="#2f2b25" />
       <Image
         src="/Logo Dark.png"
         alt="Thought Partner Logo"

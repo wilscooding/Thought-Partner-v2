@@ -35,7 +35,7 @@ export default function MatchLandingPage() {
 
                 <button
                     className="match-begin-btn"
-                    onClick={() => router.push("/match-steps")}
+                    onClick={() => router.push("/match/setup-page2")}
                     type="button"
                 >
                     Begin {/*  */}
