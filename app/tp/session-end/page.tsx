@@ -51,7 +51,7 @@ export default function TPSessionEndPage() {
                 {/* Large Home Button  */}
                 <button
                     className="end-home-btn"
-                    onClick={() => router.push("/landing")}
+                    onClick={() => router.push("/home")}
                     aria-label="Return to Home"
                 >
                     <HomeIcon />

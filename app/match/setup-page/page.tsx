@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import SiteMenu from "@/components/SiteMenu";
 import { SESSION_PROMPTS } from "@/lib/sessionPrompts";
 import { useState } from "react";
@@ -10,7 +10,11 @@ import SelectPill from "@/components/SelecPill";
 
 export default function SessionSetupPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { user } = useAuth();
+
+    // ✅ optional: chosen TP flow provides this
+    const preselectedAvatarId = searchParams.get("avatarId");
 
     const [values, setValues] = useState({
         focus: "",
@@ -48,16 +52,21 @@ export default function SessionSetupPage() {
     const onSubmit = async () => {
         setError(null);
 
-        if (!user?.uid) {
-            setError("You must be logged in to start a session.");
-            router.push("/auth/login");
-            return;
-        }
+        // keep your current behavior (auth enforced for now)
+        // if (!user?.uid) {
+        //     setError("You must be logged in to start a session.");
+        //     router.push("/auth/login");
+        //     return;
+        // }
 
         if (!values.focus || !values.area || !values.feeling || !values.outcome) {
             setError("Please answer all four questions.");
             return;
         }
+
+        // Guest / dev fallback for now (auth enforced later)
+        const firebaseUid = user?.uid ?? `guest_${crypto.randomUUID()}`;
+
 
         setIsSubmitting(true);
         try {
@@ -65,11 +74,12 @@ export default function SessionSetupPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    firebaseUid: user.uid,
+                    firebaseUid,
                     topic: values.focus,
                     area: values.area,
                     feeling: values.feeling,
                     desiredOutcome: values.outcome,
+                    avatarId: preselectedAvatarId, // ✅ NEW (optional override)
                 }),
             });
 
@@ -78,18 +88,14 @@ export default function SessionSetupPage() {
 
             const sessionId = data.session?.id as string | undefined;
             const avatarId = data.avatar?.id as string | undefined;
-            const avatarName = (data.avatar?.name as string | undefined) ?? "";
 
             if (!sessionId || !avatarId) {
                 throw new Error("Session start succeeded but returned missing sessionId/avatarId.");
             }
 
+            // ✅ NEW: go to setup-end-page so user can confirm / start over
             router.push(
-                `/tp/dialing-tp?sessionId=${encodeURIComponent(
-                    sessionId
-                )}&avatarId=${encodeURIComponent(avatarId)}&avatarName=${encodeURIComponent(
-                    avatarName
-                )}`
+                `/tp/setup-end-page?sessionId=${encodeURIComponent(sessionId)}&avatarId=${encodeURIComponent(avatarId)}`
             );
         } catch (e: any) {
             setError(e?.message ?? "Something went wrong.");
@@ -120,9 +126,7 @@ export default function SessionSetupPage() {
                                 placeholder={q.placeholder}
                                 value={values[q.id]}
                                 options={SESSION_PROMPTS[q.id]}
-                                onChange={(next) =>
-                                    setValues((prev) => ({ ...prev, [q.id]: next }))
-                                }
+                                onChange={(next) => setValues((prev) => ({ ...prev, [q.id]: next }))}
                             />
                         </div>
                     ))}

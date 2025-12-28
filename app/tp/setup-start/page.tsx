@@ -2,24 +2,32 @@
 
 import SiteMenu from "@/components/SiteMenu";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SessionSetupStartPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ✅ chosen TP flow uses this
+  const avatarId = searchParams.get("avatarId");
 
   const handleBeginClick = () => {
-    // Navigate to the first session setup question
+    // ✅ If avatarId exists, preserve it into the setup page
+    if (avatarId) {
+      router.push(`/match/setup-page?avatarId=${encodeURIComponent(avatarId)}`);
+      return;
+    }
+
+    // fallback: normal match flow
     router.push("/match/setup-page");
   };
 
   const handleBrowseProfilesClick = () => {
-    // Navigate back to the full partner list
     router.push("/tp/profile-landing");
   };
 
   return (
     <main className="light-bg-page">
-      {/* Top-right logo using Logo Dark.png */}
       <SiteMenu burgerColor="#2f2b25" />
       <Image
         src="/Logo Dark.png"
@@ -30,30 +38,22 @@ export default function SessionSetupStartPage() {
         className="main-logo-top-right"
       />
 
-      {/* Main content shell, centered and constrained */}
       <div className="session-setup-shell">
-        {/* Title */}
         <h1 className="session-setup-title">
           Let me get things set up
           <br />
           for your session.
         </h1>
 
-        {/* Subtitle / description */}
         <p className="session-setup-subtitle">
           Just a few quick questions so I can pass along what you’re hoping to
           cover today.
         </p>
 
-        {/* Primary button: Begin */}
-        <button
-          className="session-setup-primary-btn"
-          onClick={handleBeginClick}
-        >
+        <button className="session-setup-primary-btn" onClick={handleBeginClick}>
           Begin
         </button>
 
-        {/* Secondary button: Browse Profiles */}
         <button
           className="session-setup-secondary-btn"
           onClick={handleBrowseProfilesClick}

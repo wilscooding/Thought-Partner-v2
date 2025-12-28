@@ -5,6 +5,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* =========================================
    APP COLOR SYSTEM
 ========================================= */
@@ -28,6 +32,11 @@
   /* default = gold dropdown */
   --menu-text: #2f2b25;
   --menu-divider: rgba(0, 0, 0, 0.15);
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 /* =========================================
@@ -58,10 +67,9 @@ img {
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   overflow-x: hidden;
 }
-
 
 /* =========================================
    AUTH PAGES (LOGIN / REGISTER)
@@ -159,7 +167,7 @@ body {
   background: var(--tp-white);
   color: #181616;
   border: 2px solid #5a586e;
-  font-size: 1rem;
+  font-size: 16px;
   margin-bottom: 1.25rem;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -218,7 +226,6 @@ body {
   cursor: pointer;
   margin-top: 1.5rem;
   margin-bottom: 1.6rem;
-
 }
 
 .auth-btn-primary:hover {
@@ -323,9 +330,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 4.5rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-top: calc(4.5rem + var(--safe-top));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
 }
 
 .intro-shell {
@@ -407,30 +415,6 @@ body {
   color: #2f2b25;
 }
 
-.up-select-pill {
-  width: 100%;
-  border-radius: 10px;
-  border: 1px solid #333333;
-  background: var(--tp-btn-beige);
-  color: #2f2b25;
-  padding: 0.95rem 1.1rem;
-  font-size: 1rem;
-  font-family: Georgia, serif;
-  font-weight: 600;
-  box-sizing: border-box;
-  cursor: pointer;
-  margin-bottom: 1rem;
-}
-
-.up-select-pill option {
-  font-size: 16px;
-  font-family: inherit;
-  padding: 0.95rem 1.1rem;
-  background-color: #f9f6f1;
-  color: #2f2b25;
-
-}
-
 .up-select-arrow {
   position: absolute;
   right: 18px;
@@ -498,7 +482,6 @@ body {
 
 .up-arrow-icon {
   width: 52px;
-  /* wider so long tail SVG looks right */
   height: 24px;
   color: #2f2b25;
   display: block;
@@ -521,6 +504,10 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-top: calc(2rem + var(--safe-top));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
 }
 
 /* top-right logo */
@@ -581,8 +568,8 @@ body {
 /* Burger button */
 .up-burger-btn {
   position: fixed;
-  top: 2rem;
-  left: 1.5rem;
+  top: calc(2rem + var(--safe-top));
+  left: calc(1.5rem + var(--safe-left));
   background: none;
   border: none;
   z-index: 10000;
@@ -608,12 +595,11 @@ body {
 /* Dropdown container (starts under burger) */
 .site-menu-sidebar {
   position: fixed;
-  top: 3.35rem;
-  /* sits under burger */
-  left: 1.5rem;
+  top: calc(3.35rem + var(--safe-top));
+  left: calc(1.5rem + var(--safe-left));
 
   width: 280px;
-  max-width: calc(100vw - 3rem);
+  max-width: calc(100vw - (3rem + var(--safe-left) + var(--safe-right)));
 
   background-color: var(--menu-bg);
   color: var(--menu-text);
@@ -739,6 +725,7 @@ body {
   max-height: 360px;
   overflow-y: auto;
   padding-right: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Simple scrollbar */
@@ -882,10 +869,9 @@ body {
 }
 
 /* =========================================
-   TP SELECTED PROFILE PAGE (DETAILS)
+   TP SELECTED PROFILE PAGE (DETAILS)
 ========================================= */
 .tp-detail-page {
-  /* Ensure space for the fixed bottom nav */
   padding-bottom: 7rem;
 }
 
@@ -1040,7 +1026,6 @@ body {
 
 .tp-detail-back-icon {
   width: 40px;
-  /* Wider for the tail */
   height: 24px;
   color: var(--tp-light-text);
   display: block;
@@ -1088,7 +1073,6 @@ body {
 /* =========================================
    SESSION SETUP END PAGE
 ========================================= */
-
 .session-end-shell {
   width: 100%;
   max-width: 320px;
@@ -1098,7 +1082,6 @@ body {
   align-items: center;
   text-align: center;
   padding-top: 6.5rem;
-  /* room for burger + logo */
   padding-bottom: 3rem;
 }
 
@@ -1118,7 +1101,6 @@ body {
   margin-bottom: 3rem;
 }
 
-/* Make the Call */
 .session-end-primary-btn {
   width: 100%;
   max-width: 250px;
@@ -1139,7 +1121,6 @@ body {
   background-color: #e0c268;
 }
 
-/* Start Over */
 .session-end-secondary-btn {
   width: 100%;
   max-width: 250px;
@@ -1163,90 +1144,53 @@ body {
 /* =========================================
    DIALING TP PAGE - OPTIMIZED
 ========================================= */
-
 .dialing-page {
-  /* Use height: 100vh instead of min-height to lock it to the screen */
   height: 100vh;
   background: var(--tp-dark-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  /* Slightly reduced padding */
-  overflow: hidden;
-  box-sizing: border-box;
-  /* Crucial for no-scroll */
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
 }
 
 .dialing-shell {
   width: 100%;
   max-width: 360px;
   height: 100%;
-  /* Take full height to use flex alignment */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  /* Evenly spaces header, image, and button */
   text-align: center;
 }
 
 .dialing-status {
-  /* Match the small, clean look in the pic */
   font-family: system-ui, -apple-system, sans-serif;
   color: var(--tp-light-text);
   font-size: 1.8rem;
-  /* Smaller font size */
   letter-spacing: 0.05em;
   margin-bottom: 0.2rem;
-  /* Very tight gap to the name */
   text-transform: none;
 }
 
 .dialing-name {
-  /* Match the large, elegant serif look */
   font-family: Georgia, serif;
   color: var(--tp-light-text);
   font-size: 1.8rem;
-  /* Larger font size to match pic scale */
   font-weight: 500;
-  /* Medium weight for elegance */
   margin: 0;
   line-height: 1.1;
-  /* Tight line height */
 }
 
 .dialing-header {
   margin-bottom: 0;
-  /* Let space-evenly handle this */
-}
-
-/* ... dialing-status and dialing-name remain the same ... */
-
-.dialing-avatar-wrap {
-  position: relative;
-  /* Use a slightly smaller max-width for small screens */
-  width: 260px;
-  height: 260px;
-  max-width: 65vw;
-  max-height: 65vh;
-  flex-shrink: 0;
-  aspect-ratio: 1 / 1;
-  margin: 1rem 0;
-}
-
-.dialing-avatar-ring {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 4px solid var(--tp-gold);
 }
 
 .dialing-mini-logo {
   position: absolute;
   right: -5px;
-  /* Adjust slightly for better overlap */
   bottom: -5px;
   width: 60px;
   height: 60px;
@@ -1267,63 +1211,54 @@ body {
   text-decoration: underline;
   cursor: pointer;
   margin-bottom: 1rem;
-  /* Space from bottom edge */
 }
 
+/* KEEP LAST: dialing-avatar-wrap / ring / avatar */
 .dialing-avatar-wrap {
   position: relative;
-  /* Lock the dimensions to be identical */
   width: 260px;
   height: 260px;
-
-  /* Use max-width/max-height for small screens to prevent oval stretching */
   max-width: 65vw;
   max-height: 65vw;
-
-  /* Prevent the parent flex container from squishing the circle */
   flex-shrink: 0;
-
   margin: 1.5rem 0 2.5rem 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 1 / 1;
 }
 
 .dialing-avatar-ring {
   width: 90%;
   height: 90%;
   border-radius: 50%;
-  /* This creates the circle shape */
   overflow: hidden;
   border: 4px solid var(--tp-gold);
   z-index: 1;
-
-  /* Ensures the ring itself stays circular */
   aspect-ratio: 1 / 1;
 }
 
 .dialing-avatar {
   width: 100%;
   height: 100%;
-  /* This is the key to preventing "stretching" of the actual face */
   object-fit: cover;
   transform: scale(1);
-  /* Your "closer look" zoom */
   object-position: 50% 10%;
 }
 
 /* =========================================
    TP SESSION END PAGE - REFINED
 ========================================= */
-
 .end-session-page {
-  /* Ensure the page fills the screen without scrolling */
   height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
 }
 
 .end-session-shell {
@@ -1333,7 +1268,6 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  /* Space for top-right logo and burger menu */
   padding-top: 2rem;
 }
 
@@ -1365,14 +1299,12 @@ body {
   padding: 0 1rem;
 }
 
-/* Home Button Layout  */
 .end-home-btn {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   gap: 1.2rem;
-  /* Space between icon and text */
   background: none;
   border: none;
   cursor: pointer;
@@ -1381,7 +1313,6 @@ body {
 
 .end-home-icon {
   width: 80px;
-  /* Adjusted slightly for mobile fitting */
   height: 80px;
   color: var(--tp-gold);
 }
@@ -1389,13 +1320,11 @@ body {
 .end-home-text {
   font-family: Georgia, serif;
   font-size: 2rem;
-  /* Large serif text to match PDF  */
   font-weight: 700;
   color: var(--tp-white);
   line-height: 0;
 }
 
-/* Responsiveness: Shrink slightly for very small screens */
 @media (max-height: 667px) {
   .end-home-text {
     font-size: 2.5rem;
@@ -1414,13 +1343,15 @@ body {
 /* =========================================
    MATCH LANDING PAGE
 ========================================= */
-
 .match-landing-page {
   height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 2rem 1.5rem;
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-top: calc(2rem + var(--safe-top));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
 }
 
 .match-shell {
@@ -1428,13 +1359,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* Pushes content to middle, button to bottom */
   align-items: center;
   text-align: center;
   width: 100%;
   max-width: 320px;
   margin: 0 auto;
-  /* Add padding to account for fixed header elements */
   padding-top: 8rem;
   padding-bottom: 15rem;
 }
@@ -1478,7 +1407,6 @@ body {
   transform: scale(0.98);
 }
 
-/* Fix for shorter screens to ensure nothing is cut off */
 @media (max-height: 600px) {
   .match-shell {
     padding-top: 6rem;
@@ -1496,7 +1424,6 @@ body {
 /* =========================================
    SESSION SETUP PAGE
 ========================================= */
-
 .session-setup-page {
   height: 100dvh;
   display: flex;
@@ -1511,7 +1438,7 @@ body {
   margin: 0 auto;
   padding: 6rem 1.5rem 2rem 1.5rem;
   overflow-y: auto;
-  /* Allows the form to scroll on small screens */
+  -webkit-overflow-scrolling: touch;
 }
 
 .setup-form {
@@ -1539,11 +1466,10 @@ body {
   min-height: 80px;
   padding: 0.85rem;
   border-radius: 12px;
-
   border: 1px solid rgba(47, 43, 37, 0.2);
   background: white;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 16px;
   color: var(--tp-dark-text);
   resize: none;
 }
@@ -1554,25 +1480,19 @@ body {
   box-shadow: 0 0 0 2px rgba(194, 178, 128, 0.2);
 }
 
-/* Custom styled dropdown pills */
+/* KEEP LAST: up-select-pill + option (used by custom select styling) */
 .up-select-pill {
   width: 300px;
-  /* or 100% + max-width */
   background: var(--tp-btn-beige);
   border: 1px solid rgba(47, 43, 37, 0.2);
   border-radius: 9999px;
   padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
+  font-size: 16px;
   font-family: inherit;
   color: #2f2b25;
   cursor: pointer;
-
-
-  /* remove flex - don't use on select */
   display: block;
 }
-
-
 
 .up-select-pill option {
   font-size: 16px;
@@ -1581,7 +1501,6 @@ body {
   background-color: #f9f6f1;
   color: #2f2b25;
 }
-
 
 .setup-submit-btn {
   margin-top: 1rem;
@@ -1592,7 +1511,7 @@ body {
   border-radius: 9999px;
   border: none;
   font-family: Georgia, serif;
-  font-size: 1.1rem;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -1602,7 +1521,6 @@ body {
   background-color: #d4c4a1;
 }
 
-/* Hide scrollbar for clean look but keep functionality */
 .setup-shell::-webkit-scrollbar {
   width: 0px;
 }
@@ -1610,11 +1528,9 @@ body {
 /* =========================================
    PARTNER MATCH - BEIGE VERSION
 ========================================= */
-
 .partner-match-beige {
   padding-bottom: 2rem;
   overflow-y: auto;
-  /* Allow scrolling for bio content */
 }
 
 .match-beige-shell {
@@ -1631,7 +1547,6 @@ body {
 .match-partner-header-row {
   display: grid;
   grid-template-columns: 70px 1fr 70px;
-  /* Left column fixed, center takes rest, right is ghost spacer */
   align-items: center;
   margin-bottom: 1rem;
 }
@@ -1705,14 +1620,12 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-
 }
 
 .match-use-case-list li {
   font-size: 0.9rem;
   color: var(--tp-dark-text);
   margin-bottom: 0.25rem;
-
   gap: 0.4rem;
 }
 
@@ -1749,14 +1662,6 @@ body {
 .match-history-date {
   font-size: 0.8rem;
   color: #2f2b25;
-}
-
-.match-beige-actions {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
 }
 
 .match-beige-call-btn {
@@ -1808,15 +1713,13 @@ body {
 /* =========================================
    UPDATED ACTIONS (MATCHING PDF DESIGN)
 ========================================= */
-
+/* KEEP LAST: match-beige-actions */
 .match-beige-actions {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* Aligns both elements to the left as seen in PDF */
   gap: 1.5rem;
   margin-top: auto;
-  /* Pushes to bottom in no-scroll layout */
   padding-bottom: 1rem;
 }
 
@@ -1829,7 +1732,6 @@ body {
   border: none;
   font-family: Georgia, serif;
   font-size: 1.5rem;
-  /* Larger font size to match PDF style */
   font-weight: 700;
   color: #2f2b25;
   cursor: pointer;
@@ -1838,7 +1740,6 @@ body {
 
 .match-call-icon-circle-v2 {
   background-color: #d4c3a3;
-  /* Beige/Gold circle from PDF */
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -1877,24 +1778,15 @@ body {
 /* =========================================
    DARK USER PROFILE (RECTANGLE PILLS)
 ========================================= */
-
 .dark-profile-page {
   height: 100vh;
   background-color: #4a4a58;
-  /* Dark Charcoal */
   display: flex;
   flex-direction: column;
   overflow: auto;
-}
-
-.profile-shell {
-  flex: 1;
-  max-width: 450px;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 4rem 1.5rem 8rem 1.5rem;
+  padding-left: calc(1.5rem + var(--safe-left));
+  padding-right: calc(1.5rem + var(--safe-right));
+  padding-bottom: calc(1.5rem + var(--safe-bottom));
 }
 
 /* White Rectangle Name Inputs */
@@ -1910,12 +1802,12 @@ body {
   background-color: #ffffff;
   border: none;
   border-radius: 50px;
-  /* Rectangle */
   padding: 0.5rem 0.3rem;
   font-family: "Georgia", serif;
-  font-size: 1rem;
+  font-size: 16px;
   color: #1a1a1a;
   outline: none;
+
 }
 
 /* Question Scroller Area */
@@ -1923,6 +1815,7 @@ body {
   flex: 1;
   overflow-y: scroll;
   padding-right: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Custom Gold Scrollbar */
@@ -1941,8 +1834,10 @@ body {
   border-radius: 4px;
 }
 
+/* KEEP LAST: profile-question-group */
 .profile-question-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
   text-align: left;
 }
 
@@ -1980,32 +1875,24 @@ body {
   padding-top: 0.5rem;
   display: flex;
   justify-content: center;
-  margin-top: 5;
+  margin-top: 5px;
 }
 
 .profile-update-btn {
-  /* Rectangle background style */
   background-color: #c2b280;
-  /* Beige/Gold background */
   color: #2f2b25;
-  /* Black letters inside */
   border: none;
   border-radius: 50px;
-  /* Sharp rectangle edges */
 
-  /* Typography */
   font-family: "Georgia", serif;
   font-size: 1.2rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
 
-  /* Sizing */
   padding: 0.8rem 2.5rem;
   cursor: pointer;
   transition: opacity 0.2s ease;
-
-  /* Removing previous underline styles */
   text-decoration: none;
 }
 
@@ -2032,24 +1919,18 @@ body {
   font-weight: 700;
 }
 
-/* Password Input - Consistent with your name inputs but for passwords */
+/* Password Input */
 .rect-password-input {
   width: 100%;
   background-color: #f9f6f1;
   border: none;
   border-radius: 50px;
-  /* Sharp rectangle style */
   padding: 0.7rem 1rem;
   font-family: sans-serif;
   font-size: 1rem;
   color: #1a1a1a;
   outline: none;
-}
-
-/* Spacing for the groups */
-.profile-question-group {
-  margin-bottom: 2rem;
-  width: 100%;
+  font-size: 16px;
 }
 
 /* Terms Link Spacing */
@@ -2066,7 +1947,7 @@ body {
   text-underline-offset: 4px;
 }
 
-/* Adjusting the shell to allow natural page scrolling if needed */
+/* KEEP LAST: profile-shell */
 .profile-shell {
   flex: 1;
   max-width: 450px;
@@ -2117,86 +1998,41 @@ body {
   font-weight: 700;
 }
 
-/* Checkbox Styling */
-.agreement-checks {
-  width: 100%;
-  max-width: 320px;
-  margin-bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.checkbox-group {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: pointer;
-  text-align: left;
-}
-
-.checkbox-text {
-  font-family: "Georgia", serif;
-  font-size: 0.95rem;
-  color: #f9f6f1;
-  line-height: 1.4;
-}
-
-.custom-checkbox {
-  width: 20px;
-  height: 20px;
-  accent-color: #c2b280;
-  cursor: pointer;
-  margin-top: 2px;
-}
-
-/* Checkbox Container Spacing */
+/* KEEP LAST: agreement-checks / checkbox-group / checkbox-text */
 .agreement-checks {
   width: 100%;
   max-width: 350px;
-  /* Slightly wider to keep text on fewer lines */
   margin-bottom: 3rem;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  /* Tightened gap between rows */
 }
 
-/* Row Alignment */
 .checkbox-group {
   display: flex;
   align-items: center;
-  /* Centers circle vertically with the first line of text */
   gap: 8px;
-  /* Letters right next to the circle */
   cursor: pointer;
   text-align: left;
 }
 
-/* Custom Circle Checkbox */
 .custom-circle-checkbox {
   appearance: none;
-  /* Removes default square styling */
   -webkit-appearance: none;
   width: 18px;
   height: 18px;
-  /* Gold border */
   border-radius: 50%;
-  /* Forces circle shape */
   background-color: #f9f6f1;
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
-  /* Prevents circle from squishing */
   transition: background-color 0.2s ease;
 }
 
-/* Checked State - Circle fills with Gold */
 .custom-circle-checkbox:checked {
   background-color: #c2b280;
 }
 
-/* Optional: Checkmark inside the circle when checked */
 .custom-circle-checkbox:checked::after {
   content: '';
   position: absolute;
@@ -2204,13 +2040,10 @@ body {
   left: 50%;
   width: 8px;
   height: 8px;
-
-  /* Black dot in center when checked */
   border-radius: 50%;
   transform: translate(-50%, -50%);
 }
 
-/* Typography next to circle */
 .checkbox-text {
   font-family: "Georgia", serif;
   font-size: 0.95rem;
@@ -2231,7 +2064,6 @@ body {
   flex-direction: column;
   align-items: center;
 
-  /* This is the “distance from top” that matches the PDFs well */
   padding-top: 15rem;
   padding-left: 2rem;
   padding-right: 2rem;
@@ -2241,10 +2073,10 @@ body {
   width: 100%;
 }
 
+/* KEEP LAST: up-select-pill (flex variant) */
 .up-select-pill {
   position: relative;
   width: 100%;
-  /* keep your existing pill visuals here */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2269,9 +2101,7 @@ body {
 
 .tp-select-menu {
   width: 100%;
-  /* ✅ exact same width as pill */
   max-width: 100%;
-  /* ✅ never exceed container */
   margin-top: 8px;
   background: #f9f6f1;
   border: 1px solid rgba(47, 43, 37, 0.2);
@@ -2279,11 +2109,7 @@ body {
   padding: 6px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
   list-style: none;
-
-  /* ✅ prevents the menu from “spilling” outside your card */
   overflow: hidden;
-
-  /* optional: if you have lots of options */
   max-height: 240px;
   overflow-y: auto;
   color: #2f2b25;
@@ -2293,12 +2119,7 @@ body {
   padding: 10px 12px;
   border-radius: 10px;
   cursor: pointer;
-
-  /* choose one: wrap OR truncate */
   white-space: normal;
-  /* ✅ wrap */
-  /* white-space: nowrap; overflow: hidden; text-overflow: ellipsis; */
-  /* ✅ truncate */
 }
 
 .tp-select-option.is-active,
@@ -2308,4 +2129,25 @@ body {
 
 .tp-select-option.is-selected {
   font-weight: 600;
+}
+
+/* 4) Replace unsafe 100vh usage with 100dvh where possible
+      (prevents iOS Safari address-bar resize bugs) */
+@supports (height: 100dvh) {
+
+  .dialing-page,
+  .end-session-page,
+  .dark-profile-page {
+    height: 100dvh;
+  }
+}
+
+/* Fallback: still allow correct sizing where 100dvh not supported */
+@supports not (height: 100dvh) {
+
+  .dialing-page,
+  .end-session-page,
+  .dark-profile-page {
+    height: 100vh;
+  }
 }

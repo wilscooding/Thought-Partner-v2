@@ -48,16 +48,13 @@ export default function SessionSetupPage() {
     const onSubmit = async () => {
         setError(null);
 
-        if (!user?.uid) {
-            setError("You must be logged in to start a session.");
-            router.push("/auth/login");
-            return;
-        }
-
         if (!values.focus || !values.area || !values.feeling || !values.outcome) {
             setError("Please answer all four questions.");
             return;
         }
+
+        // Guest/dev fallback for now (auth will be enforced later)
+        const firebaseUid = user?.uid ?? "dev_uid_local";
 
         setIsSubmitting(true);
         try {
@@ -65,7 +62,7 @@ export default function SessionSetupPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    firebaseUid: user.uid,
+                    firebaseUid,
                     topic: values.focus,
                     area: values.area,
                     feeling: values.feeling,
@@ -78,17 +75,15 @@ export default function SessionSetupPage() {
 
             const sessionId = data.session?.id as string | undefined;
             const avatarId = data.avatar?.id as string | undefined;
-            const avatarName = (data.avatar?.name as string | undefined) ?? "";
 
             if (!sessionId || !avatarId) {
                 throw new Error("Session start succeeded but returned missing sessionId/avatarId.");
             }
 
+            // NEW FLOW: go to tp-match first (choose to call or rematch)
             router.push(
-                `/tp/dialing-tp?sessionId=${encodeURIComponent(
-                    sessionId
-                )}&avatarId=${encodeURIComponent(avatarId)}&avatarName=${encodeURIComponent(
-                    avatarName
+                `/match/tp-match?sessionId=${encodeURIComponent(sessionId)}&avatarId=${encodeURIComponent(
+                    avatarId
                 )}`
             );
         } catch (e: any) {
@@ -120,9 +115,7 @@ export default function SessionSetupPage() {
                                 placeholder={q.placeholder}
                                 value={values[q.id]}
                                 options={SESSION_PROMPTS[q.id]}
-                                onChange={(next) =>
-                                    setValues((prev) => ({ ...prev, [q.id]: next }))
-                                }
+                                onChange={(next) => setValues((prev) => ({ ...prev, [q.id]: next }))}
                             />
                         </div>
                     ))}

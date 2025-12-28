@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import SiteMenu from "@/components/SiteMenu";
-
-
 
 // Phone icon (Make the call)
 const PhoneIcon = () => (
@@ -18,7 +17,8 @@ const PhoneIcon = () => (
         strokeLinecap="round"
         strokeLinejoin="round"
     >
-        <path d="M21 16.5v3a2 2 0 0 1-2.2 2
+        <path
+            d="M21 16.5v3a2 2 0 0 1-2.2 2
       18 18 0 0 1-7.8-2.8
       17.5 17.5 0 0 1-5.2-5.2
       18 18 0 0 1-2.8-7.8
@@ -53,8 +53,60 @@ const RestartIcon = () => (
     </svg>
 );
 
+type AvatarDTO = {
+    id: string;
+    name: string;
+};
+
 export default function SessionSetupEndPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const sessionId = searchParams.get("sessionId") ?? "";
+    const avatarId = searchParams.get("avatarId") ?? "";
+
+    const [avatarName, setAvatarName] = useState<string>("");
+
+    useEffect(() => {
+        if (!sessionId || !avatarId) {
+            // If someone lands here without params, send them back to start the flow
+            router.replace("/tp/profile-landing");
+            return;
+        }
+
+        let alive = true;
+
+        (async () => {
+            try {
+                const res = await fetch(`/api/avatars/${encodeURIComponent(avatarId)}`);
+                const data = (await res.json()) as AvatarDTO;
+
+                if (alive && res.ok) {
+                    setAvatarName(data?.name ?? "");
+                }
+            } catch {
+                // silent fallback
+            }
+        })();
+
+        return () => {
+            alive = false;
+        };
+    }, [sessionId, avatarId, router]);
+
+    const onMakeCall = () => {
+        if (!sessionId || !avatarId) return;
+
+        router.push(
+            `/tp/dialing-tp?sessionId=${encodeURIComponent(sessionId)}&avatarId=${encodeURIComponent(
+                avatarId
+            )}&avatarName=${encodeURIComponent(avatarName)}`
+        );
+    };
+
+    const onStartOver = () => {
+        router.push("/tp/profile-landing");
+    };
 
     return (
         <main className="light-bg-page">
@@ -84,18 +136,12 @@ export default function SessionSetupEndPage() {
                     they need to begin.
                 </p>
 
-                <button
-                    className="session-end-primary-btn"
-                    onClick={() => router.push("/call")} // change to your real call route
-                >
+                <button className="session-end-primary-btn" onClick={onMakeCall}>
                     <PhoneIcon />
                     Make the Call
                 </button>
 
-                <button
-                    className="session-end-secondary-btn"
-                    onClick={() => router.push("/session/start")} // change to your start-over route
-                >
+                <button className="session-end-secondary-btn" onClick={onStartOver}>
                     <RestartIcon />
                     Start Over
                 </button>
