@@ -40,10 +40,10 @@ const LockIcon = () => (
 // --- MENU ITEMS WITH ICON REFERENCE ---
 
 const MENU_ITEMS = [
-    { name: "My Profile", path: "/profile", Icon: UserIcon },
-    { name: "Thought Partner Profiles", path: "/partners", Icon: BookIcon },
-    { name: "Match Me", path: "/match", Icon: CompassIcon },
-    { name: "Security & Privacy", path: "/settings/privacy", Icon: LockIcon },
+    { name: "My Profile", path: "/tp/profile", Icon: UserIcon },
+    { name: "Thought Partner Profiles", path: "/tp/profile-landing", Icon: BookIcon },
+    { name: "Match Me", path: "/tp/setup-start", Icon: CompassIcon },
+    { name: "Security & Privacy", path: "/user/security", Icon: LockIcon },
 ];
 
 type SiteMenuProps = {
@@ -65,13 +65,13 @@ export default function SiteMenu({ burgerColor = "#c2b280" }: SiteMenuProps) {
     return (
         <>
             {/* 1. Burger Menu Button (Positioned Top-Left) */}
-            <button 
+            <button
                 className="up-burger-btn"
                 onClick={handleOpen}
                 aria-label="Open Menu"
             >
                 {/* Burger Icon SVG */}
-                <svg viewBox="0 0 24 24" fill="none" stroke={ burgerColor } strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke={burgerColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="3" y1="12" x2="21" y2="12" />
                     <line x1="3" y1="6" x2="21" y2="6" />
                     <line x1="3" y1="18" x2="21" y2="18" />
@@ -82,21 +82,21 @@ export default function SiteMenu({ burgerColor = "#c2b280" }: SiteMenuProps) {
             {isMenuOpen && (
                 <div className="site-menu-overlay" onClick={handleClose}>
                     <div className="site-menu-sidebar" onClick={(e) => e.stopPropagation()}>
-                        
+
                         {/* Only close button remains */}
                         <div className="site-menu-header">
                             <button onClick={handleClose} className="site-menu-close-btn">×</button>
                         </div>
-                        
+
                         <nav className="site-menu-nav">
                             {MENU_ITEMS.map(item => (
-                                <button 
-                                    key={item.name} 
-                                    onClick={() => handleNavigation(item.path)} 
+                                <button
+                                    key={item.name}
+                                    onClick={() => handleNavigation(item.path)}
                                     className="site-menu-item"
                                 >
                                     {/* Renders the Icon component here */}
-                                    <item.Icon /> 
+                                    <item.Icon />
                                     {item.name}
                                 </button>
                             ))}
