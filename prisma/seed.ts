@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as XLSX from "xlsx";
 import mammoth from "mammoth";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '../generated/prisma/client';
 import { PrismaPg } from "@prisma/adapter-pg"; // This is the new part
 import pg from "pg"; // This is the new part
 import dotenv from "dotenv";
