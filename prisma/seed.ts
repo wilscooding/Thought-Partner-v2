@@ -2,9 +2,9 @@ import fs from "fs";
 import path from "path";
 import * as XLSX from "xlsx";
 import mammoth from "mammoth";
-import { PrismaClient } from '../generated/prisma/client';
-import { PrismaPg } from "@prisma/adapter-pg"; // This is the new part
-import pg from "pg"; // This is the new part
+import { PrismaClient } from "../generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 import dotenv from "dotenv";
 
 dotenv.config({ path: ".env" });
@@ -31,12 +31,48 @@ const AVATAR_NAMES = new Set([
     "Emery Jules",
 ]);
 
-
 function slugify(name: string) {
     return name
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "_")
         .replace(/^_+|_+$/g, "");
+}
+
+/**
+ * ✅ ElevenLabs voice IDs (you provided)
+ * Key MUST match your avatar `id` (slugified name).
+ */
+const VOICE_MAP: Record<string, string> = {
+    denise_okoro: "EXAVITQu4vr4xnSDxMaL", // Sarah
+    ellis_reed: "onwK4e9ZLuTAKqWW03F9", // Daniel
+    river_quinn: "SAz9YHcvj6GT2YYXdXww", // River
+    theo_lane: "JBFqnCBsd6RMkjVDRZzb", // George
+    rosa_alvarez: "pNInz6obpgDQGcFmaJgB", // Adam
+    leo_tran: "XrExE9yKIg1WjnnlVkGX", // Matilda
+    nadine_shah: "pqHfZKP75CvOlQylNhV4", // Bill
+    elliott_stein: "IKne3meq5aSn9XLyUdCD", // Charlie
+    rami_ellis: "nPczCjzI2devNBz1zQrb", // Brian
+    jordan_lane: "TX3LPaxmHKxFdv7VOQHJ", // Liam
+    alex_rowan: "cjVigY5qzO86Huf0OWal", // Eric
+    emery_jules: "pFZP5JQG7iQjIQuC4Bku", // Lily
+};
+
+/**
+ * Fallback voices if anything is missing (re-use is fine)
+ * If an avatar ID isn't in VOICE_MAP, we assign a fallback (stable).
+ */
+const FALLBACK_VOICES = [
+    "EXAVITQu4vr4xnSDxMaL", // Sarah
+    "onwK4e9ZLuTAKqWW03F9", // Daniel
+    "SAz9YHcvj6GT2YYXdXww", // River
+    "JBFqnCBsd6RMkjVDRZzb", // George
+];
+
+function stableFallbackVoiceId(avatarId: string) {
+    // simple stable hash so it doesn't change run-to-run
+    let h = 0;
+    for (let i = 0; i < avatarId.length; i++) h = (h * 31 + avatarId.charCodeAt(i)) >>> 0;
+    return FALLBACK_VOICES[h % FALLBACK_VOICES.length];
 }
 
 async function readDocxText(filePath: string) {
@@ -47,7 +83,10 @@ async function readDocxText(filePath: string) {
 // Keeps this robust if the docx formatting changes a bit
 async function parseProfileDescriptionsDocx(docxPath: string) {
     const text = await readDocxText(docxPath);
-    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    const lines = text
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean);
 
     // Map: avatar name -> { profileBlurb, bestUsedWhen (as multi-line string) }
     const map = new Map<string, { profileBlurb?: string; bestUsedWhen?: string }>();
@@ -57,17 +96,13 @@ async function parseProfileDescriptionsDocx(docxPath: string) {
     let collectingBest = false;
     let bestLines: string[] = [];
 
-    // We detect avatar sections by a line that looks like a full name (2 words) and appears before a blurb.
-    // If your docx uses a consistent “Name” line, this works well.
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
         const isBestHeader = /^best to use when/i.test(line);
-
-        // Heuristic: avatar name lines often look like "First Last"
         const looksLikeName = AVATAR_NAMES.has(line);
+
         if (looksLikeName && !isBestHeader) {
-            // flush previous
             if (currentName) {
                 map.set(currentName, {
                     profileBlurb: currentBlurb ?? undefined,
@@ -89,7 +124,6 @@ async function parseProfileDescriptionsDocx(docxPath: string) {
         }
 
         if (!collectingBest && !currentBlurb) {
-            // first line after the name is usually the blurb
             currentBlurb = line;
             continue;
         }
@@ -99,7 +133,6 @@ async function parseProfileDescriptionsDocx(docxPath: string) {
         }
     }
 
-    // flush last
     if (currentName) {
         map.set(currentName, {
             profileBlurb: currentBlurb ?? undefined,
@@ -120,7 +153,8 @@ async function main() {
     if (!fs.existsSync(seedRoot)) throw new Error(`Missing folder: ${seedRoot}`);
     if (!fs.existsSync(xlsxPath)) throw new Error(`Missing file: ${xlsxPath}`);
     if (!fs.existsSync(promptsDir)) throw new Error(`Missing folder: ${promptsDir}`);
-    if (!fs.existsSync(universalPromptPath)) throw new Error(`Missing file: ${universalPromptPath}`);
+    if (!fs.existsSync(universalPromptPath))
+        throw new Error(`Missing file: ${universalPromptPath}`);
     if (!fs.existsSync(profileDescPath)) throw new Error(`Missing file: ${profileDescPath}`);
 
     const universalPrompt = await readDocxText(universalPromptPath);
@@ -146,14 +180,16 @@ async function main() {
 
         const archetype = String(row["Archetype"] ?? "").trim() || null;
         const gender = String(row["Gender"] ?? "").trim() || null;
-        const engagedWhen = String(row["Engaged When User Context Mindset is Selected"] ?? "").trim() || null;
+        const engagedWhen =
+            String(row["Engaged When User Context Mindset is Selected"] ?? "").trim() || null;
 
         const personalityDescription =
             String(row["Avatar Personality Description for Prompt"] ?? "").trim() || null;
-        const physicalDescription =
-            String(row["Avatar Physical Description"] ?? "").trim() || null;
-        const voiceDescription =
-            String(row["Avatar Voice Description"] ?? "").trim() || null;
+        const physicalDescription = String(row["Avatar Physical Description"] ?? "").trim() || null;
+        const voiceDescription = String(row["Avatar Voice Description"] ?? "").trim() || null;
+
+        // ✅ Choose ElevenLabs voiceId (mapped or fallback)
+        const elevenLabsVoiceId = VOICE_MAP[id] ?? stableFallbackVoiceId(id);
 
         // Avatar-specific prompt file
         const specificPromptPath = path.join(promptsDir, `${name} Avatar System Prompt.docx`);
@@ -185,6 +221,9 @@ async function main() {
                 voiceDescription,
                 systemPrompt,
                 photoKey,
+
+                // ✅ ADD THIS
+                elevenLabsVoiceId,
             },
             create: {
                 id,
@@ -199,11 +238,14 @@ async function main() {
                 voiceDescription,
                 systemPrompt,
                 photoKey,
+
+                // ✅ ADD THIS
+                elevenLabsVoiceId,
             },
         });
 
         count++;
-        console.log(`✅ Seeded: ${name} → ${id}`);
+        console.log(`✅ Seeded: ${name} → ${id} (voice=${elevenLabsVoiceId})`);
     }
 
     console.log(`🎉 Done. Seeded/updated ${count} avatars.`);

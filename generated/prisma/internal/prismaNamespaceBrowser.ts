@@ -110,6 +110,8 @@ export const AvatarScalarFieldEnum = {
   voiceDescription: 'voiceDescription',
   systemPrompt: 'systemPrompt',
   photoKey: 'photoKey',
+  elevenLabsVoiceId: 'elevenLabsVoiceId',
+  elevenVoiceName: 'elevenVoiceName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -37,6 +37,8 @@ export type AvatarMinAggregateOutputType = {
   voiceDescription: string | null
   systemPrompt: string | null
   photoKey: string | null
+  elevenLabsVoiceId: string | null
+  elevenVoiceName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +56,8 @@ export type AvatarMaxAggregateOutputType = {
   voiceDescription: string | null
   systemPrompt: string | null
   photoKey: string | null
+  elevenLabsVoiceId: string | null
+  elevenVoiceName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -71,6 +75,8 @@ export type AvatarCountAggregateOutputType = {
   voiceDescription: number
   systemPrompt: number
   photoKey: number
+  elevenLabsVoiceId: number
+  elevenVoiceName: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -90,6 +96,8 @@ export type AvatarMinAggregateInputType = {
   voiceDescription?: true
   systemPrompt?: true
   photoKey?: true
+  elevenLabsVoiceId?: true
+  elevenVoiceName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -107,6 +115,8 @@ export type AvatarMaxAggregateInputType = {
   voiceDescription?: true
   systemPrompt?: true
   photoKey?: true
+  elevenLabsVoiceId?: true
+  elevenVoiceName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +134,8 @@ export type AvatarCountAggregateInputType = {
   voiceDescription?: true
   systemPrompt?: true
   photoKey?: true
+  elevenLabsVoiceId?: true
+  elevenVoiceName?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -214,6 +226,8 @@ export type AvatarGroupByOutputType = {
   voiceDescription: string | null
   systemPrompt: string | null
   photoKey: string | null
+  elevenLabsVoiceId: string | null
+  elevenVoiceName: string | null
   createdAt: Date
   updatedAt: Date
   _count: AvatarCountAggregateOutputType | null
@@ -252,6 +266,8 @@ export type AvatarWhereInput = {
   voiceDescription?: Prisma.StringNullableFilter<"Avatar"> | string | null
   systemPrompt?: Prisma.StringNullableFilter<"Avatar"> | string | null
   photoKey?: Prisma.StringNullableFilter<"Avatar"> | string | null
+  elevenLabsVoiceId?: Prisma.StringNullableFilter<"Avatar"> | string | null
+  elevenVoiceName?: Prisma.StringNullableFilter<"Avatar"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Avatar"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Avatar"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -270,6 +286,8 @@ export type AvatarOrderByWithRelationInput = {
   voiceDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   systemPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
   photoKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  elevenLabsVoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  elevenVoiceName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
@@ -291,6 +309,8 @@ export type AvatarWhereUniqueInput = Prisma.AtLeast<{
   voiceDescription?: Prisma.StringNullableFilter<"Avatar"> | string | null
   systemPrompt?: Prisma.StringNullableFilter<"Avatar"> | string | null
   photoKey?: Prisma.StringNullableFilter<"Avatar"> | string | null
+  elevenLabsVoiceId?: Prisma.StringNullableFilter<"Avatar"> | string | null
+  elevenVoiceName?: Prisma.StringNullableFilter<"Avatar"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Avatar"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Avatar"> | Date | string
   sessions?: Prisma.SessionListRelationFilter
@@ -309,6 +329,8 @@ export type AvatarOrderByWithAggregationInput = {
   voiceDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   systemPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
   photoKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  elevenLabsVoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  elevenVoiceName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AvatarCountOrderByAggregateInput
@@ -332,6 +354,8 @@ export type AvatarScalarWhereWithAggregatesInput = {
   voiceDescription?: Prisma.StringNullableWithAggregatesFilter<"Avatar"> | string | null
   systemPrompt?: Prisma.StringNullableWithAggregatesFilter<"Avatar"> | string | null
   photoKey?: Prisma.StringNullableWithAggregatesFilter<"Avatar"> | string | null
+  elevenLabsVoiceId?: Prisma.StringNullableWithAggregatesFilter<"Avatar"> | string | null
+  elevenVoiceName?: Prisma.StringNullableWithAggregatesFilter<"Avatar"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Avatar"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Avatar"> | Date | string
 }
@@ -349,6 +373,8 @@ export type AvatarCreateInput = {
   voiceDescription?: string | null
   systemPrompt?: string | null
   photoKey?: string | null
+  elevenLabsVoiceId?: string | null
+  elevenVoiceName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutAvatarInput
@@ -367,6 +393,8 @@ export type AvatarUncheckedCreateInput = {
   voiceDescription?: string | null
   systemPrompt?: string | null
   photoKey?: string | null
+  elevenLabsVoiceId?: string | null
+  elevenVoiceName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutAvatarInput
@@ -385,6 +413,8 @@ export type AvatarUpdateInput = {
   voiceDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenLabsVoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenVoiceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutAvatarNestedInput
@@ -403,6 +433,8 @@ export type AvatarUncheckedUpdateInput = {
   voiceDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenLabsVoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenVoiceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutAvatarNestedInput
@@ -421,6 +453,8 @@ export type AvatarCreateManyInput = {
   voiceDescription?: string | null
   systemPrompt?: string | null
   photoKey?: string | null
+  elevenLabsVoiceId?: string | null
+  elevenVoiceName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -438,6 +472,8 @@ export type AvatarUpdateManyMutationInput = {
   voiceDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenLabsVoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenVoiceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,6 +491,8 @@ export type AvatarUncheckedUpdateManyInput = {
   voiceDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenLabsVoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenVoiceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -472,6 +510,8 @@ export type AvatarCountOrderByAggregateInput = {
   voiceDescription?: Prisma.SortOrder
   systemPrompt?: Prisma.SortOrder
   photoKey?: Prisma.SortOrder
+  elevenLabsVoiceId?: Prisma.SortOrder
+  elevenVoiceName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -489,6 +529,8 @@ export type AvatarMaxOrderByAggregateInput = {
   voiceDescription?: Prisma.SortOrder
   systemPrompt?: Prisma.SortOrder
   photoKey?: Prisma.SortOrder
+  elevenLabsVoiceId?: Prisma.SortOrder
+  elevenVoiceName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -506,6 +548,8 @@ export type AvatarMinOrderByAggregateInput = {
   voiceDescription?: Prisma.SortOrder
   systemPrompt?: Prisma.SortOrder
   photoKey?: Prisma.SortOrder
+  elevenLabsVoiceId?: Prisma.SortOrder
+  elevenVoiceName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -542,6 +586,8 @@ export type AvatarCreateWithoutSessionsInput = {
   voiceDescription?: string | null
   systemPrompt?: string | null
   photoKey?: string | null
+  elevenLabsVoiceId?: string | null
+  elevenVoiceName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -559,6 +605,8 @@ export type AvatarUncheckedCreateWithoutSessionsInput = {
   voiceDescription?: string | null
   systemPrompt?: string | null
   photoKey?: string | null
+  elevenLabsVoiceId?: string | null
+  elevenVoiceName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -592,6 +640,8 @@ export type AvatarUpdateWithoutSessionsInput = {
   voiceDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenLabsVoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenVoiceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -609,6 +659,8 @@ export type AvatarUncheckedUpdateWithoutSessionsInput = {
   voiceDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   systemPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   photoKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenLabsVoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  elevenVoiceName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -657,6 +709,8 @@ export type AvatarSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   voiceDescription?: boolean
   systemPrompt?: boolean
   photoKey?: boolean
+  elevenLabsVoiceId?: boolean
+  elevenVoiceName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sessions?: boolean | Prisma.Avatar$sessionsArgs<ExtArgs>
@@ -676,6 +730,8 @@ export type AvatarSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   voiceDescription?: boolean
   systemPrompt?: boolean
   photoKey?: boolean
+  elevenLabsVoiceId?: boolean
+  elevenVoiceName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["avatar"]>
@@ -693,6 +749,8 @@ export type AvatarSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   voiceDescription?: boolean
   systemPrompt?: boolean
   photoKey?: boolean
+  elevenLabsVoiceId?: boolean
+  elevenVoiceName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["avatar"]>
@@ -710,11 +768,13 @@ export type AvatarSelectScalar = {
   voiceDescription?: boolean
   systemPrompt?: boolean
   photoKey?: boolean
+  elevenLabsVoiceId?: boolean
+  elevenVoiceName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AvatarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "archetype" | "gender" | "engagedWhen" | "profileBlurb" | "bestUsedWhen" | "personalityDescription" | "physicalDescription" | "voiceDescription" | "systemPrompt" | "photoKey" | "createdAt" | "updatedAt", ExtArgs["result"]["avatar"]>
+export type AvatarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "archetype" | "gender" | "engagedWhen" | "profileBlurb" | "bestUsedWhen" | "personalityDescription" | "physicalDescription" | "voiceDescription" | "systemPrompt" | "photoKey" | "elevenLabsVoiceId" | "elevenVoiceName" | "createdAt" | "updatedAt", ExtArgs["result"]["avatar"]>
 export type AvatarInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.Avatar$sessionsArgs<ExtArgs>
   _count?: boolean | Prisma.AvatarCountOutputTypeDefaultArgs<ExtArgs>
@@ -740,6 +800,8 @@ export type $AvatarPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     voiceDescription: string | null
     systemPrompt: string | null
     photoKey: string | null
+    elevenLabsVoiceId: string | null
+    elevenVoiceName: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["avatar"]>
@@ -1178,6 +1240,8 @@ export interface AvatarFieldRefs {
   readonly voiceDescription: Prisma.FieldRef<"Avatar", 'String'>
   readonly systemPrompt: Prisma.FieldRef<"Avatar", 'String'>
   readonly photoKey: Prisma.FieldRef<"Avatar", 'String'>
+  readonly elevenLabsVoiceId: Prisma.FieldRef<"Avatar", 'String'>
+  readonly elevenVoiceName: Prisma.FieldRef<"Avatar", 'String'>
   readonly createdAt: Prisma.FieldRef<"Avatar", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Avatar", 'DateTime'>
 }

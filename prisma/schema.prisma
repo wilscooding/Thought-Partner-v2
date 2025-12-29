@@ -58,6 +58,10 @@ model Avatar {
   // Usually same as id, but kept flexible for renames.
   photoKey String?
 
+  // ElevenLabs voice ID
+  elevenLabsVoiceId String?
+  elevenVoiceName String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
