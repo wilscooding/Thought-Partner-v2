@@ -4,11 +4,12 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import SiteMenu from "@/components/SiteMenu";
 import { SESSION_PROMPTS } from "@/lib/sessionPrompts";
-import { useState } from "react";
+import { useState, Suspense } from "react"; // Added Suspense
 import { useAuth } from "@/components/AuthProvider";
 import SelectPill from "@/components/SelecPill";
 
-export default function SessionSetupPage() {
+// 1. Core Logic Component (Handles all the state and search params)
+function SessionSetupForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user } = useAuth();
@@ -52,21 +53,12 @@ export default function SessionSetupPage() {
     const onSubmit = async () => {
         setError(null);
 
-        // keep your current behavior (auth enforced for now)
-        // if (!user?.uid) {
-        //     setError("You must be logged in to start a session.");
-        //     router.push("/auth/login");
-        //     return;
-        // }
-
         if (!values.focus || !values.area || !values.feeling || !values.outcome) {
             setError("Please answer all four questions.");
             return;
         }
 
-        // Guest / dev fallback for now (auth enforced later)
         const firebaseUid = user?.uid ?? `guest_${crypto.randomUUID()}`;
-
 
         setIsSubmitting(true);
         try {
@@ -79,7 +71,7 @@ export default function SessionSetupPage() {
                     area: values.area,
                     feeling: values.feeling,
                     desiredOutcome: values.outcome,
-                    avatarId: preselectedAvatarId, // ✅ NEW (optional override)
+                    avatarId: preselectedAvatarId,
                 }),
             });
 
@@ -93,7 +85,6 @@ export default function SessionSetupPage() {
                 throw new Error("Session start succeeded but returned missing sessionId/avatarId.");
             }
 
-            // ✅ NEW: go to setup-end-page so user can confirm / start over
             router.push(
                 `/tp/setup-end-page?sessionId=${encodeURIComponent(sessionId)}&avatarId=${encodeURIComponent(avatarId)}`
             );
@@ -104,6 +95,39 @@ export default function SessionSetupPage() {
         }
     };
 
+    return (
+        <div className="setup-shell">
+            <form className="setup-form" onSubmit={(e) => e.preventDefault()}>
+                {questions.map((q) => (
+                    <div key={q.id} className="setup-field">
+                        <SelectPill
+                            label={q.label}
+                            placeholder={q.placeholder}
+                            value={values[q.id]}
+                            options={SESSION_PROMPTS[q.id]}
+                            onChange={(next) => setValues((prev) => ({ ...prev, [q.id]: next }))}
+                        />
+                    </div>
+                ))}
+
+                {error && <div className="setup-error">{error}</div>}
+
+                <button
+                    type="button"
+                    className="setup-submit-btn"
+                    onClick={onSubmit}
+                    disabled={isSubmitting}
+                    aria-disabled={isSubmitting}
+                >
+                    {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
+            </form>
+        </div>
+    );
+}
+
+// 2. Main Export (Maintains CSS wrapper classes and handles the Suspense boundary)
+export default function SessionSetupPage() {
     return (
         <main className="light-bg-page session-setup-page">
             <SiteMenu burgerColor="#2f2b25" />
@@ -117,33 +141,9 @@ export default function SessionSetupPage() {
                 className="main-logo-top-right"
             />
 
-            <div className="setup-shell">
-                <form className="setup-form" onSubmit={(e) => e.preventDefault()}>
-                    {questions.map((q) => (
-                        <div key={q.id} className="setup-field">
-                            <SelectPill
-                                label={q.label}
-                                placeholder={q.placeholder}
-                                value={values[q.id]}
-                                options={SESSION_PROMPTS[q.id]}
-                                onChange={(next) => setValues((prev) => ({ ...prev, [q.id]: next }))}
-                            />
-                        </div>
-                    ))}
-
-                    {error && <div className="setup-error">{error}</div>}
-
-                    <button
-                        type="button"
-                        className="setup-submit-btn"
-                        onClick={onSubmit}
-                        disabled={isSubmitting}
-                        aria-disabled={isSubmitting}
-                    >
-                        {isSubmitting ? "Submitting..." : "Submit"}
-                    </button>
-                </form>
-            </div>
+            <Suspense fallback={<div className="setup-shell" style={{ textAlign: 'center', padding: '2rem' }}>Loading questions...</div>}>
+                <SessionSetupForm />
+            </Suspense>
         </main>
     );
 }
