@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import SiteMenu from "@/components/SiteMenu";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react"; // Added Suspense
 
 // Phone Icon SVG
 const PhoneIcon = () => (
@@ -40,22 +40,18 @@ type AvatarDTO = {
   id: string;
   name: string;
   systemPrompt?: string | null;
-
-  // Optional fields depending on your schema/API
   profileBlurb?: string | null;
-  bestUsedWhen?: string[] | null; // if stored as JSON array
+  bestUsedWhen?: string[] | null;
   lastConnectedDate?: string | null;
-
-  // image
-  photoKey?: string | null; // e.g. "Denise Okoro.webp"
-  imagePath?: string | null; // if your API returns an absolute/relative path
+  photoKey?: string | null;
+  imagePath?: string | null;
 };
 
-export default function SelectedTPProfilePage() {
+// 1. Logic and Content Component
+function ProfileContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Expect: /tp/selected-tp?avatarId=denise_okoro
   const avatarId = searchParams.get("avatarId") ?? "denise_okoro";
 
   const [avatar, setAvatar] = useState<AvatarDTO | null>(null);
@@ -64,21 +60,15 @@ export default function SelectedTPProfilePage() {
 
   useEffect(() => {
     let alive = true;
-
     (async () => {
       try {
         setLoading(true);
         setError(null);
-
         const res = await fetch(`/api/avatars/${encodeURIComponent(avatarId)}`, {
           method: "GET",
         });
-
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data?.error ?? "Failed to load Thought Partner");
-        }
-
+        if (!res.ok) throw new Error(data?.error ?? "Failed to load Thought Partner");
         if (alive) setAvatar(data);
       } catch (e: any) {
         if (alive) {
@@ -89,83 +79,41 @@ export default function SelectedTPProfilePage() {
         if (alive) setLoading(false);
       }
     })();
-
-    return () => {
-      alive = false;
-    };
+    return () => { alive = false; };
   }, [avatarId]);
 
   const imageSrc = useMemo(() => {
-    // Prefer API-provided imagePath, then photoKey, then fallback
     const name = (avatar?.name ?? "").trim();
     if (name) return `/${name}.webp`;
     return "/Denise Okoro.webp";
   }, [avatar]);
 
   const bestUsedWhen = useMemo(() => {
-    // Normalize to array
     if (Array.isArray(avatar?.bestUsedWhen)) return avatar?.bestUsedWhen ?? [];
     return [];
   }, [avatar]);
 
   const isPreviouslyConnected = !!avatar?.lastConnectedDate;
 
-  if (loading) {
-    return (
-      <main className="dark-landing-page tp-detail-page">
-        <SiteMenu />
-        <Image
-          src="/Logo Gold.png"
-          alt="App Logo"
-          width={56}
-          height={56}
-          priority
-          className="main-logo-top-right"
-        />
-        <div className="tp-detail-shell">Loading...</div>
-      </main>
-    );
-  }
+  if (loading) return <div className="tp-detail-shell">Loading...</div>;
 
   if (error || !avatar) {
     return (
-      <main className="dark-landing-page tp-detail-page">
-        <SiteMenu />
-        <Image
-          src="/Logo Gold.png"
-          alt="App Logo"
-          width={56}
-          height={56}
-          priority
-          className="main-logo-top-right"
-        />
-        <div className="tp-detail-shell">
-          <p>{error ?? "Partner not found."}</p>
-          <button
-            type="button"
-            className="tp-detail-back-btn"
-            onClick={() => router.push("/tp/profile-landing")}
-          >
-            Back to profiles
-          </button>
-        </div>
-      </main>
+      <div className="tp-detail-shell">
+        <p>{error ?? "Partner not found."}</p>
+        <button
+          type="button"
+          className="tp-detail-back-btn"
+          onClick={() => router.push("/tp/profile-landing")}
+        >
+          Back to profiles
+        </button>
+      </div>
     );
   }
 
   return (
-    <main className="dark-landing-page tp-detail-page">
-      <SiteMenu />
-
-      <Image
-        src="/Logo Gold.png"
-        alt="App Logo"
-        width={56}
-        height={56}
-        priority
-        className="main-logo-top-right"
-      />
-
+    <>
       <div className="tp-detail-shell">
         <div className="tp-detail-header-row">
           <div className="tp-detail-image-wrapper">
@@ -223,9 +171,7 @@ export default function SelectedTPProfilePage() {
           type="button"
           className="tp-detail-connect-btn"
           onClick={() =>
-            router.push(
-              `/tp/setup-start?avatarId=${encodeURIComponent(avatar.id)}`
-            )
+            router.push(`/tp/setup-start?avatarId=${encodeURIComponent(avatar.id)}`)
           }
           aria-label={`Connect with ${avatar.name}`}
         >
@@ -234,6 +180,28 @@ export default function SelectedTPProfilePage() {
           </div>
         </button>
       </div>
+    </>
+  );
+}
+
+// 2. Exported Page Wrapper
+export default function SelectedTPProfilePage() {
+  return (
+    <main className="dark-landing-page tp-detail-page">
+      <SiteMenu />
+
+      <Image
+        src="/Logo Gold.png"
+        alt="App Logo"
+        width={56}
+        height={56}
+        priority
+        className="main-logo-top-right"
+      />
+
+      <Suspense fallback={<div className="tp-detail-shell">Loading Partner...</div>}>
+        <ProfileContent />
+      </Suspense>
     </main>
   );
 }

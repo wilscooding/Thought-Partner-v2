@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react"; // Added Suspense
 import SiteMenu from "@/components/SiteMenu";
 
 // Phone icon (Make the call)
@@ -58,7 +58,8 @@ type AvatarDTO = {
     name: string;
 };
 
-export default function SessionSetupEndPage() {
+// 1. Internal Content Component
+function SessionSetupEndContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -69,7 +70,6 @@ export default function SessionSetupEndPage() {
 
     useEffect(() => {
         if (!sessionId || !avatarId) {
-            // If someone lands here without params, send them back to start the flow
             router.replace("/tp/profile-landing");
             return;
         }
@@ -109,11 +109,38 @@ export default function SessionSetupEndPage() {
     };
 
     return (
+        <div className="session-end-shell">
+            <h1 className="session-end-title">
+                All set. I’ve passed
+                <br />
+                everything along.
+            </h1>
+
+            <p className="session-end-subtitle">
+                Your Thought Partner has what
+                <br />
+                they need to begin.
+            </p>
+
+            <button className="session-end-primary-btn" onClick={onMakeCall}>
+                <PhoneIcon />
+                Make the Call
+            </button>
+
+            <button className="session-end-secondary-btn" onClick={onStartOver}>
+                <RestartIcon />
+                Start Over
+            </button>
+        </div>
+    );
+}
+
+// 2. Exported Page Wrapper
+export default function SessionSetupEndPage() {
+    return (
         <main className="light-bg-page">
-            {/* burger (set burger to dark on light pages) */}
             <SiteMenu burgerColor="#2f2b25" />
 
-            {/* top-right logo (dark logo on light page) */}
             <Image
                 src="/Logo Dark.png"
                 alt="Thought Partner Logo"
@@ -123,29 +150,9 @@ export default function SessionSetupEndPage() {
                 className="main-logo-top-right"
             />
 
-            <div className="session-end-shell">
-                <h1 className="session-end-title">
-                    All set. I’ve passed
-                    <br />
-                    everything along.
-                </h1>
-
-                <p className="session-end-subtitle">
-                    Your Thought Partner has what
-                    <br />
-                    they need to begin.
-                </p>
-
-                <button className="session-end-primary-btn" onClick={onMakeCall}>
-                    <PhoneIcon />
-                    Make the Call
-                </button>
-
-                <button className="session-end-secondary-btn" onClick={onStartOver}>
-                    <RestartIcon />
-                    Start Over
-                </button>
-            </div>
+            <Suspense fallback={<div className="session-end-shell"><p>Loading details...</p></div>}>
+                <SessionSetupEndContent />
+            </Suspense>
         </main>
     );
 }

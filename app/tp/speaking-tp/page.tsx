@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react"; // Added Suspense
 import { useRouter, useSearchParams } from "next/navigation";
 
 type AvatarDTO = {
@@ -9,7 +9,7 @@ type AvatarDTO = {
     name: string;
 };
 
-export default function SpeakingTPPage() {
+function SpeakingTPContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -19,7 +19,6 @@ export default function SpeakingTPPage() {
 
     const [avatarName, setAvatarName] = useState(avatarNameFromQS);
 
-    // ✅ Match SelectedTPProfilePage behavior: name-based webp in /public
     const avatarImgSrc = useMemo(() => {
         const name = (avatarName || avatarNameFromQS || "").trim();
         if (name) return `/${name}.webp`;
@@ -34,7 +33,6 @@ export default function SpeakingTPPage() {
 
         let alive = true;
 
-        // Fetch avatar details for correct name (and therefore correct image)
         (async () => {
             try {
                 const res = await fetch(`/api/avatars/${encodeURIComponent(avatarId)}`);
@@ -65,39 +63,47 @@ export default function SpeakingTPPage() {
     };
 
     return (
-        <main className="dialing-page">
-            <div className="dialing-shell">
-                <div className="dialing-header">
-                    <div className="dialing-status">Speaking To</div>
-                    <h1 className="dialing-name">{avatarName || "Connecting..."}</h1>
-                </div>
+        <div className="dialing-shell">
+            <div className="dialing-header">
+                <div className="dialing-status">Speaking To</div>
+                <h1 className="dialing-name">{avatarName || "Connecting..."}</h1>
+            </div>
 
-                <div className="dialing-avatar-wrap">
-                    <div className="dialing-avatar-ring">
-                        <Image
-                            src={avatarImgSrc}
-                            alt={avatarName || "Avatar"}
-                            width={260}
-                            height={260}
-                            className="dialing-avatar"
-                            priority
-                        />
-                    </div>
-
+            <div className="dialing-avatar-wrap">
+                <div className="dialing-avatar-ring">
                     <Image
-                        src="/Logo Gold.png"
-                        alt="Logo"
-                        width={42}
-                        height={42}
-                        className="dialing-mini-logo"
+                        src={avatarImgSrc}
+                        alt={avatarName || "Avatar"}
+                        width={260}
+                        height={260}
+                        className="dialing-avatar"
                         priority
                     />
                 </div>
 
-                <button className="dialing-end-btn" onClick={endCall} type="button">
-                    End Call
-                </button>
+                <Image
+                    src="/Logo Gold.png"
+                    alt="Logo"
+                    width={42}
+                    height={42}
+                    className="dialing-mini-logo"
+                    priority
+                />
             </div>
+
+            <button className="dialing-end-btn" onClick={endCall} type="button">
+                End Call
+            </button>
+        </div>
+    );
+}
+
+export default function SpeakingTPPage() {
+    return (
+        <main className="dialing-page">
+            <Suspense fallback={<div className="dialing-shell"><div className="dialing-status">Connecting...</div></div>}>
+                <SpeakingTPContent />
+            </Suspense>
         </main>
     );
 }

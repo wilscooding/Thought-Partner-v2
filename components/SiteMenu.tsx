@@ -42,7 +42,7 @@ const LockIcon = () => (
 const MENU_ITEMS = [
     { name: "My Profile", path: "/tp/profile", Icon: UserIcon },
     { name: "Thought Partner Profiles", path: "/tp/profile-landing", Icon: BookIcon },
-    { name: "Match Me", path: "/tp/setup-start", Icon: CompassIcon },
+    { name: "Match Me", path: "/match/landing-page", Icon: CompassIcon },
     { name: "Security & Privacy", path: "/user/security", Icon: LockIcon },
 ];
 

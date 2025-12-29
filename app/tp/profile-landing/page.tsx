@@ -35,7 +35,7 @@ export default function TPProfileLandingPage() {
 
     const handleMatchMeClick = () => {
         // This starts the "match me" flow (no avatar selected yet)
-        router.push("/tp/setup-start");
+        router.push("/match/landing-page");
     };
 
     return (
