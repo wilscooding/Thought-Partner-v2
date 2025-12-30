@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@/generated/prisma"; // adjust if your import differs
-
+import { prisma } from "@/lib/prisma";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-
-const prisma = new PrismaClient();
 
 type TTSBody = {
     text: string;
@@ -36,16 +33,16 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing `avatarId`" }, { status: 400 });
         }
 
-        // Fetch voiceId from Prisma (seed already populated elevenVoiceId)
+        // Fetch voiceId from Prisma (seed already populated elevenLabsVoiceId)
         const avatar = await prisma.avatar.findUnique({
             where: { id: body.avatarId },
-            select: { elevenVoiceId: true },
+            select: { elevenLabsVoiceId: true },
         });
 
-        const voiceId = avatar?.elevenVoiceId;
+        const voiceId = avatar?.elevenLabsVoiceId;
         if (!voiceId) {
             return NextResponse.json(
-                { error: `Avatar missing elevenVoiceId: ${body.avatarId}` },
+                { error: `Avatar missing elevenLabsVoiceId: ${body.avatarId}` },
                 { status: 400 }
             );
         }
@@ -84,7 +81,7 @@ export async function POST(req: Request) {
                     status: elevenRes.status,
                     details: errText?.slice(0, 1000),
                 },
-                { status: 500 }
+                { status: elevenRes.status }
             );
         }
 

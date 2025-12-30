@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         const languageCode = (form.get("language_code") as string) || "";
 
         const elevenForm = new FormData();
-        elevenForm.append("audio", audio, audio.name || "audio.webm");
+        elevenForm.append("file", audio, audio.name || "audio.webm");
         elevenForm.append("model_id", modelId);
         if (languageCode) elevenForm.append("language_code", languageCode);
 
