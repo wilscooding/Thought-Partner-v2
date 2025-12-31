@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import Image from "next/image";
 
@@ -16,15 +16,12 @@ export default function LoginPage() {
   useEffect(() => {
     (async () => {
       try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          router.replace("/home");
-        }
+        await getRedirectResult(auth);
       } catch {
         // No redirect happened — ignore
       }
     })();
-  }, [router]);
+  }, []);
 
 
   // Removed FormEvent type annotation for plain JS compatibility -> Added back for TS
@@ -54,13 +51,31 @@ export default function LoginPage() {
     alert("Forgot Password flow coming soon.");
   };
 
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     const provider = new GoogleAuthProvider();
+  //     await signInWithRedirect(auth, provider);
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert("Google sign-in failed.");
+  //   }
+  // };
+
   const handleGoogleLogin = async () => {
+    setLoading(true); // Show the "Logging in..." state
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithRedirect(auth, provider);
+      // Use Popup instead of Redirect
+      const result = await signInWithPopup(auth, provider);
+
+      // If we get here, the user is logged in!
+      console.log("Logged in user:", result.user.email);
+      router.push("/home"); // Send them home
     } catch (err) {
-      console.error(err);
-      alert("Google sign-in failed.");
+      console.error("Google Error:", err);
+      alert("Google sign-in failed. Check the console for details.");
+    } finally {
+      setLoading(false);
     }
   };
 
