@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuth } from "@/components/AuthProvider";
+import SiteMenu from "@/components/SiteMenu";
 
 export default function HomePage() {
   const router = useRouter();
@@ -17,55 +19,62 @@ export default function HomePage() {
 
   if (loading || (!user && typeof window !== "undefined")) {
     return (
-      <main className="h-screen flex items-center justify-center">
-        <div className="text-sm text-gray-400">Loading your space…</div>
+      <main className="min-h-screen flex items-center justify-center bg-[#4a4a58]">
+        <div className="text-sm text-[#c2b280] opacity-80">
+          Loading your space…
+        </div>
       </main>
     );
   }
 
+  const handleBrowse = () => {
+    router.push("/tp/profile-landing"); // adjust if needed
+  };
+
   const handleMatchMe = async () => {
-    setLoadingMatch(true);
-    try {
-      const res = await fetch("/api/session/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          topic: "Test topic",
-          feeling: "curious",
-          desiredOutcome: "Just testing the flow",
-        }),
-      });
-      const data = await res.json();
-      console.log("Session start result:", data);
-      alert(`Matched avatar: ${data.avatar?.name ?? "placeholder"}`);
-    } catch (err) {
-      console.error(err);
-      alert("Error starting session (stub).");
-    } finally {
-      setLoadingMatch(false);
-    }
+    router.push("/match/landing-page");
   };
 
   return (
-    <main className="h-screen flex flex-col items-center justify-center px-6 gap-6 text-center">
-      <h1 className="text-2xl font-semibold">Your Thinking Space</h1>
-      <p className="text-sm text-gray-400">
-        Choose how you want to start.
-      </p>
+    <main className="tp-home">
+      <div className="tp-home__topbar">
+        <SiteMenu />
+        <Image
+          src="/Logo Gold.png"
+          alt="Thought Partner Logo"
+          width={48}
+          height={48}
+          priority
+          className="main-logo-top-right"
+        />
+      </div>
 
-      <div className="flex flex-col w-full max-w-xs gap-3 mt-4">
-        <button className="py-3 rounded-xl border border-gray-700">
-          Browse Thought Partners
+      <div className="tp-home__content">
+        <button type="button" onClick={handleBrowse} className="tp-home__card">
+          <div className="tp-home__cardText tp-home__cardText--big">
+            Browse Our<br />Thought Partners
+          </div>
         </button>
 
+        <div className="tp-home__divider">
+          <div className="tp-home__line" />
+          <div className="tp-home__or">Or</div>
+          <div className="tp-home__line" />
+        </div>
+
         <button
+          type="button"
           onClick={handleMatchMe}
           disabled={loadingMatch}
-          className="py-3 rounded-xl bg-white text-black font-medium disabled:opacity-60"
+          className="tp-home__card"
         >
-          {loadingMatch ? "Matching…" : "Match Me for This Moment"}
+          <div className="tp-home__cardText tp-home__cardText--med">
+            {loadingMatch ? "Matching…" : "Find My Match for"}<br />
+            {loadingMatch ? "This Moment…" : "This Moment"}
+          </div>
         </button>
       </div>
     </main>
   );
+
 }

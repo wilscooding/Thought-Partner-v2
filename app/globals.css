@@ -2151,3 +2151,122 @@ body {
     height: 100vh;
   }
 }
+
+/* ===== TP HOME (Main Landing Page) ===== */
+.tp-home {
+  min-height: 100vh;
+  background: #4a4a58;
+  /* slate */
+  display: flex;
+  flex-direction: column;
+}
+
+.tp-home__topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 24px 0;
+}
+
+.tp-home__logo {
+  width: 48px;
+  height: 48px;
+}
+
+.tp-home__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 88px 24px 48px;
+  /* pushes cards down like PDF */
+  gap: 44px;
+}
+
+.tp-home__card {
+  width: 100%;
+  max-width: 520px;
+  background: #e8dcc7;
+  /* beige */
+  border-radius: 28px;
+  padding: 44px 28px;
+  border: none;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.tp-home__card:active {
+  transform: translateY(2px);
+}
+
+.tp-home__card:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.tp-home__cardText {
+  text-align: center;
+  color: #1b1b22;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 10px;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.tp-home__cardText--big {
+  font-size: 44px;
+}
+
+.tp-home__cardText--med {
+  font-size: 40px;
+  line-height: 1.1;
+}
+
+.tp-home__divider {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.tp-home__line {
+  height: 3px;
+  flex: 1;
+  background: #c2b280;
+  /* gold */
+  border-radius: 999px;
+}
+
+.tp-home__or {
+  color: #c2b280;
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* ===== Mobile tuning ===== */
+@media (max-width: 430px) {
+  .tp-home__content {
+    padding-top: 88px;
+    gap: 36px;
+  }
+
+  .tp-home__card {
+    border-radius: 26px;
+    padding: 40px 22px;
+  }
+
+  .tp-home__cardText--big {
+    font-size: 30px;
+  }
+
+  .tp-home__cardText--med {
+    font-size: 30px;
+  }
+}

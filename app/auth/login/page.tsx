@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import Image from "next/image";
 
@@ -22,7 +22,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.replace("/home");
-    } catch (err: unknown) {
+    } catch (err) {
       console.error(err);
 
       let errorMessage = "Login failed, Please check your credentials.";
@@ -40,10 +40,24 @@ export default function LoginPage() {
     alert("Forgot Password flow coming soon.");
   };
 
-  const handleGoogleLogin = () => {
-    // TODO: wire Google provider
-    alert("Google sign-in coming soon.");
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      router.replace("/home");
+    } catch (err) {
+      console.error(err);
+      let errorMessage = "Google sign-in failed.";
+      if (err && typeof err === "object" && "message" in err) {
+        errorMessage = (err as { message: string }).message;
+      }
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   const handleAppleLogin = () => {
     // TODO: wire Apple provider
