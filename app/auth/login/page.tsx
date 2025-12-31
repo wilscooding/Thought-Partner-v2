@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import Image from "next/image";
 
@@ -12,6 +12,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          router.replace("/home");
+        }
+      } catch {
+        // No redirect happened — ignore
+      }
+    })();
+  }, [router]);
+
 
   // Removed FormEvent type annotation for plain JS compatibility -> Added back for TS
   const onSubmit = async (e: React.FormEvent) => {
@@ -41,22 +55,15 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.replace("/home");
+      await signInWithRedirect(auth, provider);
     } catch (err) {
       console.error(err);
-      let errorMessage = "Google sign-in failed.";
-      if (err && typeof err === "object" && "message" in err) {
-        errorMessage = (err as { message: string }).message;
-      }
-      alert(errorMessage);
-    } finally {
-      setLoading(false);
+      alert("Google sign-in failed.");
     }
   };
+
 
 
   const handleAppleLogin = () => {
